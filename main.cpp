@@ -58,6 +58,8 @@ void runFile(string filename)
 	
 	loadFile(filename, code, false);
 	
+	cout << "running " << filename << endl;
+	
 	runCode(code, 0);
 }
 
@@ -131,6 +133,27 @@ int runCode(string& code, int start)
 				quit=true;
 				break;
 			}
+			break;
+			
+		case '"':
+			
+			int j;
+			for (j=i+1; code[j]!='"'; j++)
+			{
+				if (j+1>=(int)code.size())
+				{
+					cout << "no closing quote" << endl;
+					exit(-1);
+				}
+			}
+			
+			{
+				string filename=code.substr(i+1, j-i-1);
+			
+				runFile(filename);
+			}
+			
+			i=j;
 			break;
 			
 		default:
