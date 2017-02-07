@@ -21,7 +21,7 @@
 				<Option object_output="obj/Release/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="renderer.bfuck" />
+				<Option parameters="division.bfuck" />
 				<Compiler>
 					<Add option="-O2" />
 				</Compiler>
@@ -34,6 +34,7 @@
 			<Add option="-Wall" />
 		</Compiler>
 		<Unit filename="design.txt" />
+		<Unit filename="division.bfuck" />
 		<Unit filename="hello_world.bfuck" />
 		<Unit filename="main.cpp" />
 		<Unit filename="renderer.bfuck" />

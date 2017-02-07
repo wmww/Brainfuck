@@ -1,17 +1,42 @@
 
 this is a work in progress that is bits of a graphics renderer
 
-
-tx_7 +++++++
+in		1	+++++
 >
-ty_5 +++++
+low_in	0	+++
 >
-bx_3 +++
+hgh_in	2	+++++++
 >
-by_3 +++
+low_out	0	++++++++++
 >
-iy_4 ++++
+hgh_out	60	++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 <<<<
 
->>>[->->+<<]<<<
->>[->>>>+<<<<<<->>]<<
+this is a lerp snippit
+see the lerp spreadsheet for how it works
+the numbers refer to what row of the spreadsheet the code produces
+each section starts at the left
+
+2 >[<->>>>>+<<<<-]<
+
+3 >>>[>->>+<<<-]<<<
+
+4 [>>>>[>>>+>+<<<<-]>>>>[<<<<+>>>>-]<<<<<<<<-]
+
+5 >>>>>[<<<->>>-]<<<<<
+
+6
++
+>>>>>>>
+[
+	<<<<<-
+	[>]<< [		if current cell is zero
+		>>>>>>>>>+<
+		[<<<<<<+>>>>>>-]
+		<<<<<<<
+	]
+	
+	>>>>>>>+<-
+]
+<<<<<<<
+-

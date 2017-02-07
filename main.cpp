@@ -17,7 +17,7 @@ using std::string;
 
 using std::vector;
 
-const int DATA_SIZE=10000;
+const int DATA_SIZE=30000;
 int data[DATA_SIZE]; // will be auto initalized to 0
 int offset=0;
 int min=offset, max=offset;

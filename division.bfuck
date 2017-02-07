@@ -1,0 +1,48 @@
+this is an abstraction of division that should be able to be used in other code
+
+n	d	0	1	0	tmp	out
+
+,
+------------
+------------
+------------
+------------
+>,
+------------
+------------
+------------
+------------
+<[>++++++++++<-]
+>>
+
+,
+------------
+------------
+------------
+------------
+>,
+------------
+------------
+------------
+------------
+<[>++++++++++<-]
+>>
+
+<<<[>>>+<<<-]
+>>[>>+<<-]
+>
+
+
+0
+>
+1 +
+<<<
+
+[
+	>>>>>+<<<<-	move one from d to tmp
+	[>]>>[ if d is 0
+		>>>+			add one to out
+		<[<<<<+>>>>-]<	copy value from tmp back to d leaving off at the 0 before tmp
+	]
+	<<<<- decrement n
+]
