@@ -21,7 +21,7 @@
 				<Option object_output="obj/Release/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="src.bfuck" />
+				<Option parameters="get_num.bfuck" />
 				<Compiler>
 					<Add option="-O2" />
 				</Compiler>

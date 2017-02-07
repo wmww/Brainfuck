@@ -18,16 +18,16 @@ using std::string;
 using std::vector;
 
 const int DATA_SIZE=30000;
-int data[DATA_SIZE]; // will be auto initalized to 0
+int data[DATA_SIZE]; // is auto initalized to 0 by compiler
 int offset=0;
 int min=offset, max=offset;
-vector<int> stack;
 
 const bool debug=true;
 
 bool loadFile(string filename, string& contents, bool debug);
 
 int runCode(string& code, int start); //send it some source and the index after the '[', it will return the index after ']'
+void runFile(string filename);
 void showDebug(char lastCmd);
 int findMatchingBrase(string& code, int start);
 
@@ -49,11 +49,14 @@ int main(int argc, char ** argv)
 		return 0;
 	}
 	
+	runFile(filename);
+}
+
+void runFile(string filename)
+{
 	string code;
 	
 	loadFile(filename, code, false);
-	
-	//getline(cin, code);
 	
 	runCode(code, 0);
 }
@@ -108,7 +111,7 @@ int runCode(string& code, int start)
 		case '[':
 			if (data[offset])
 			{
-				runCode(code, i+1);
+				i=runCode(code, i+1);
 			}
 			else
 			{
