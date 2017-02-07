@@ -25,15 +25,27 @@ vector<int> stack;
 
 bool loadFile(string filename, string& contents, bool debug);
 
-int main()
+int main(int argc, char ** argv)
 {
 	cout << "William's brainfuck interpreter, array size is " << DATA_SIZE << endl << endl;
 	
 	//cout << "enter code: ";
 	
+	string filename;
+	
+	if (argc>1)
+	{
+		filename=string(argv[1]);
+	}
+	else
+	{
+		cout << "please specify a source file" << endl;
+		return 0;
+	}
+	
 	string code;
 	
-	loadFile("src.bfuck", code, false);
+	loadFile(filename, code, false);
 	
 	//getline(cin, code);
 	
