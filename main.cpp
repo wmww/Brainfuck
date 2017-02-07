@@ -27,6 +27,10 @@ const bool debug=true;
 
 bool loadFile(string filename, string& contents, bool debug);
 
+int runCode(string& code, int start); //send it some source and the index after the '[', it will return the index after ']'
+void showDebug(char lastCmd);
+int findMatchingBrase(string& code, int start);
+
 int main(int argc, char ** argv)
 {
 	cout << "William's brainfuck interpreter, array size is " << DATA_SIZE << endl << endl;
@@ -51,7 +55,15 @@ int main(int argc, char ** argv)
 	
 	//getline(cin, code);
 	
-	for (int i=0; i<int(code.size()); i++)
+	runCode(code, 0);
+}
+
+int runCode(string& code, int start)
+{
+	int i=start;
+	bool quit=false;
+	
+	while (i<(int)code.size() && !quit)
 	{
 		bool comment=false;
 		
@@ -98,27 +110,7 @@ int main(int argc, char ** argv)
 				stack.push_back(i);
 			else
 			{
-				int count=1;
-				i++;
-				
-				for (; count>0; i++)
-				{
-					if (i>(int)code.size())
-					{
-						cout << endl << "'[' without matching ']'" << endl;
-						return 1;
-					}
-					
-					if (code[i]=='[')
-					{
-						count++;
-					}
-					else if (code[i]==']')
-					{
-						count--;
-					}
-				}
-				
+				i=findMatchingBrase(code, i);
 				i--;
 			}
 			break;
@@ -126,16 +118,13 @@ int main(int argc, char ** argv)
 		case ']':
 			if (data[offset])
 			{
-				if (stack.empty())
-				{
-					cout << endl << "']' without matching '['" << endl;
-					return 1;
-				}
-				i=stack.back();
+				i=start;
+				i--;
 			}
 			else
 			{
-				stack.pop_back();
+				quit=true;
+				break;
 			}
 			break;
 			
@@ -146,24 +135,58 @@ int main(int argc, char ** argv)
 		
 		if (!comment && debug)
 		{
-			for (int i=min; i<=max; i++)
-			{
-				cout << data[i] << "\t";
-			}
-			
-			cout << endl;
-			
-			//for (int i=min; i<offset; i++)
-			//	cout << "\t";
-			
-			//cout << "|" << endl;
-			
-			for (int i=min; i<offset; i++)
-				cout << "\t";
-			
-			cout << code[i] << endl << endl;
+			showDebug(code[i]);
 		}
+		
+		i++;
 	}
+	
+	return i;
+}
+
+int findMatchingBrase(string& code, int start)
+{
+	int count=0;
+	int i=start;
+	
+	do {
+		
+		if (i>(int)code.size())
+		{
+			cout << endl << "'[' without matching ']'" << endl;
+			return 1;
+		}
+		
+		if (code[i]=='[')
+			count++;
+		else if (code[i]==']')
+			count--;
+			
+		i++;
+		
+	} while(count>0);
+	
+	return i;
+}
+
+void showDebug(char lastCmd)
+{
+	for (int i=min; i<=max; i++)
+	{
+		cout << data[i] << "\t";
+	}
+	
+	cout << endl;
+	
+	//for (int i=min; i<offset; i++)
+	//	cout << "\t";
+	
+	//cout << "|" << endl;
+	
+	for (int i=min; i<offset; i++)
+		cout << "\t";
+	
+	cout << lastCmd << endl << endl;
 }
 
 bool loadFile(string filename, string& contents, bool debug)
