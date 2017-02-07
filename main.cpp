@@ -107,7 +107,9 @@ int runCode(string& code, int start)
 			
 		case '[':
 			if (data[offset])
-				stack.push_back(i);
+			{
+				runCode(code, i+1);
+			}
 			else
 			{
 				i=findMatchingBrase(code, i);
