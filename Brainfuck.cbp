@@ -33,6 +33,7 @@
 		</Compiler>
 		<Unit filename="brainfuck.txt" />
 		<Unit filename="main.cpp" />
+		<Unit filename="src.bfuck" />
 		<Extensions>
 			<code_completion />
 			<envvars />

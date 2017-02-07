@@ -48,6 +48,7 @@ int main()
 				cout << endl << "you went too far left" << endl;
 				return 1;
 			}
+			min=std::min(min, offset);
 			break;
 			
 		case '>':
@@ -57,6 +58,7 @@ int main()
 				cout << endl << "you went too far right" << endl;
 				return 1;
 			}
+			max=std::max(max, offset);
 			break;
 			
 		case '+':
@@ -68,7 +70,7 @@ int main()
 			break;
 			
 		case '.':
-			cout << (char)data[offset] << endl;
+			putchar(data[offset]);
 			break;
 			
 		case ',':
@@ -76,7 +78,33 @@ int main()
 			break;
 			
 		case '[':
-			stack.push_back(i);
+			if (data[offset])
+				stack.push_back(i);
+			else
+			{
+				int count=1;
+				i++;
+				
+				for (; count>0; i++)
+				{
+					if (i>(int)code.size())
+					{
+						cout << endl << "'[' without matching ']'" << endl;
+						return 1;
+					}
+					
+					if (code[i]=='[')
+					{
+						count++;
+					}
+					else if (code[i]==']')
+					{
+						count--;
+					}
+				}
+				
+				i--;
+			}
 			break;
 			
 		case ']':
@@ -97,6 +125,20 @@ int main()
 		default:
 			break;
 		}
+		
+		/*for (int i=min; i<=max; i++)
+		{
+			cout << data[i] << "\t";
+		}
+		
+		cout << endl;
+		
+		for (int i=min; i<offset; i++)
+		{
+			cout << "\t";
+		}
+		
+		cout << "|" << endl << endl;*/
 	}
 }
 
