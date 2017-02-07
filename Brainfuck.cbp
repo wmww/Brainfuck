@@ -21,7 +21,7 @@
 				<Option object_output="obj/Release/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="src.bfuck" />
+				<Option parameters="renderer.bfuck" />
 				<Compiler>
 					<Add option="-O2" />
 				</Compiler>
@@ -33,8 +33,11 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="brainfuck.txt" />
+		<Unit filename="design.txt" />
+		<Unit filename="hello_world.bfuck" />
 		<Unit filename="main.cpp" />
+		<Unit filename="renderer.bfuck" />
+		<Unit filename="reverse_string.bfuck" />
 		<Unit filename="src.bfuck" />
 		<Extensions>
 			<code_completion />

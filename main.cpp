@@ -23,6 +23,8 @@ int offset=0;
 int min=offset, max=offset;
 vector<int> stack;
 
+const bool debug=true;
+
 bool loadFile(string filename, string& contents, bool debug);
 
 int main(int argc, char ** argv)
@@ -51,6 +53,8 @@ int main(int argc, char ** argv)
 	
 	for (int i=0; i<int(code.size()); i++)
 	{
+		bool comment=false;
+		
 		switch (code[i])
 		{
 		case '<':
@@ -133,24 +137,32 @@ int main(int argc, char ** argv)
 			{
 				stack.pop_back();
 			}
+			break;
 			
 		default:
+			comment=true;
 			break;
 		}
 		
-		/*for (int i=min; i<=max; i++)
+		if (!comment && debug)
 		{
-			cout << data[i] << "\t";
+			for (int i=min; i<=max; i++)
+			{
+				cout << data[i] << "\t";
+			}
+			
+			cout << endl;
+			
+			//for (int i=min; i<offset; i++)
+			//	cout << "\t";
+			
+			//cout << "|" << endl;
+			
+			for (int i=min; i<offset; i++)
+				cout << "\t";
+			
+			cout << code[i] << endl << endl;
 		}
-		
-		cout << endl;
-		
-		for (int i=min; i<offset; i++)
-		{
-			cout << "\t";
-		}
-		
-		cout << "|" << endl << endl;*/
 	}
 }
 
