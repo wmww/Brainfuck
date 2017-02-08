@@ -35,12 +35,14 @@
 		</Compiler>
 		<Unit filename="design.txt" />
 		<Unit filename="divide.bfuck" />
+		<Unit filename="draw_span.bfuck" />
 		<Unit filename="get_num.bfuck" />
 		<Unit filename="hello_world.bfuck" />
 		<Unit filename="lerp.bfuck" />
 		<Unit filename="main.cpp" />
 		<Unit filename="renderer.bfuck" />
 		<Unit filename="reverse_string.bfuck" />
+		<Unit filename="save_bmp.bfuck" />
 		<Unit filename="src.bfuck" />
 		<Extensions>
 			<code_completion />

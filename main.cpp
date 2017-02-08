@@ -22,7 +22,7 @@ int data[DATA_SIZE]; // is auto initalized to 0 by compiler
 int offset=0;
 int min=offset, max=offset;
 
-const bool debug=true;
+const bool debug=false;
 
 bool loadFile(string filename, string& contents, bool debug);
 
@@ -33,7 +33,7 @@ int findMatchingBrase(string& code, int start);
 
 int main(int argc, char ** argv)
 {
-	cout << "William's brainfuck interpreter, array size is " << DATA_SIZE << endl << endl;
+	//cout << "William's brainfuck interpreter, array size is " << DATA_SIZE << endl << endl;
 	
 	//cout << "enter code: ";
 	
