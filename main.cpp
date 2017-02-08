@@ -80,7 +80,6 @@ int runCode(string& code, int start)
 		{
 		case '<':
 			offset--;
-			cout << "hihihi\n\n\n" << endl;
 			if (offset<0)
 			{
 				cout << endl << "you went too far left" << endl;

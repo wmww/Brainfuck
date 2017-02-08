@@ -6,12 +6,7 @@ n	d	0	1	0	tmp	out
 >
 "get_num.bfuck"
 
->
-0
->
-1 +
-<<<
-
+>>+<<<
 [
 	->->>>>+<<<<
 	[>]>>[ if d is 0
@@ -20,3 +15,5 @@ n	d	0	1	0	tmp	out
 	]
 	<<<< decrement n
 ]
+>>>>>>[<<<<+>>>>-] move out back to the 3rd position
+<[-]<<-<<[-]< zero out the other vals
