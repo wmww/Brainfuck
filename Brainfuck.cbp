@@ -34,9 +34,10 @@
 			<Add option="-Wall" />
 		</Compiler>
 		<Unit filename="design.txt" />
-		<Unit filename="division.bfuck" />
+		<Unit filename="divide.bfuck" />
 		<Unit filename="get_num.bfuck" />
 		<Unit filename="hello_world.bfuck" />
+		<Unit filename="lerp.bfuck" />
 		<Unit filename="main.cpp" />
 		<Unit filename="renderer.bfuck" />
 		<Unit filename="reverse_string.bfuck" />
