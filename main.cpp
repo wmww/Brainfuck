@@ -46,7 +46,7 @@ int main(int argc, char ** argv)
 	else
 	{
 		cout << "please specify a source file" << endl;
-		return 0;
+		exit(0);
 	}
 	
 	runFile(filename);
@@ -58,7 +58,11 @@ void runFile(string filename)
 	
 	loadFile(filename, code, false);
 	
-	cout << "running " << filename << endl;
+	if (code.empty())
+	{
+		cout << "could not load '" << filename << "'" << endl;
+		exit(-1);
+	}
 	
 	runCode(code, 0);
 }
@@ -76,10 +80,11 @@ int runCode(string& code, int start)
 		{
 		case '<':
 			offset--;
+			cout << "hihihi\n\n\n" << endl;
 			if (offset<0)
 			{
 				cout << endl << "you went too far left" << endl;
-				return 1;
+				exit(-1);
 			}
 			min=std::min(min, offset);
 			break;
@@ -89,7 +94,7 @@ int runCode(string& code, int start)
 			if (offset>=DATA_SIZE)
 			{
 				cout << endl << "you went too far right" << endl;
-				return 1;
+				exit(-1);
 			}
 			max=std::max(max, offset);
 			break;
@@ -114,6 +119,7 @@ int runCode(string& code, int start)
 			if (data[offset])
 			{
 				i=runCode(code, i+1);
+				i--;
 			}
 			else
 			{
@@ -182,7 +188,7 @@ int findMatchingBrase(string& code, int start)
 		if (i>(int)code.size())
 		{
 			cout << endl << "'[' without matching ']'" << endl;
-			return 1;
+			exit(-1);
 		}
 		
 		if (code[i]=='[')
