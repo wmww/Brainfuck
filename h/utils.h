@@ -13,3 +13,5 @@ bool loadFile(string filename, string& contents, bool debug=false);
 bool writeFile(string filename, string& contents, bool debug=false);
 
 string getDirOfPath(string path);
+
+string runCmd(string cmd);

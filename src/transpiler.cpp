@@ -4,8 +4,8 @@ const int DATA_SIZE=600000;
 
 const bool debug=false;
 
-int transpileCode(string& code, int start); //send it some source and the index after the '[', it will return the index after ']'
-void transpileFile(string filename);
+string transpileCode(string& code, int start); //send it some source and the index after the '[', it will return the index after ']'
+string transpileFile(string filename);
 void showDebug(char lastCmd);
 int findMatchingBrase(string& code, int start);
 string currentFIle="";
@@ -16,11 +16,13 @@ int main(int argc, char ** argv)
 	
 	//cout << "enter code: ";
 	
-	string filename;
+	string infilename;
+	string outSourceFile="transpiled/source.c";
+	string outBinFile="transpiled/bin";
 	
 	if (argc>1)
 	{
-		filename=string(argv[1]);
+		infilename=string(argv[1]);
 	}
 	else
 	{
@@ -28,7 +30,25 @@ int main(int argc, char ** argv)
 		exit(0);
 	}
 	
-	runFile(filename);
+	string out = "";
+	
+	out+=
+		"#include <stdio.h>\n"
+		"int main(void) {\n"
+		"	printf(\"Hello, World!\\n\");\n"
+		"}";
+	
+	//transpileFile(filename);
+	
+	writeFile(outSourceFile, out, false);
+	
+	string cmd = "gcc -std=c99 '"+outSourceFile+"' -o '"+outBinFile+"'";
+	
+	cout << "running '"+cmd+"'" << endl;
+	
+	string cmdOut = runCmd(cmd);
+	
+	cout << cmdOut << endl;
 }
 
 string transpileFile(string filename)
@@ -56,8 +76,9 @@ string transpileFile(string filename)
 	return out;
 }
 
-int transpileCode(string& code, int start)
+string transpileCode(string& code, int start)
 {
+	/*
 	int i=start;
 	bool quit=false;
 	
@@ -164,6 +185,9 @@ int transpileCode(string& code, int start)
 	}
 	
 	return i;
+	*/
+	
+	return "//this is some code\n";
 }
 
 int findMatchingBrase(string& code, int start)
@@ -189,24 +213,4 @@ int findMatchingBrase(string& code, int start)
 	} while(count>0);
 	
 	return i;
-}
-
-void showDebug(char lastCmd)
-{
-	for (int i=min; i<=max; i++)
-	{
-		cout << data[i] << "\t";
-	}
-	
-	cout << endl;
-	
-	//for (int i=min; i<offset; i++)
-	//	cout << "\t";
-	
-	//cout << "|" << endl;
-	
-	for (int i=min; i<offset; i++)
-		cout << "\t";
-	
-	cout << lastCmd << endl << endl;
 }
