@@ -4,7 +4,7 @@ const int DATA_SIZE=600000;
 
 const bool debug=false;
 
-string transpileCode(string& code, int start); //send it some source and the index after the '[', it will return the index after ']'
+string transpileCode(string& code, int& i); //send it some source and the index after the '[', it will return the index after ']'
 string transpileFile(string filename);
 void showDebug(char lastCmd);
 int findMatchingBrase(string& code, int start);
@@ -34,11 +34,15 @@ int main(int argc, char ** argv)
 	
 	out+=
 		"#include <stdio.h>\n"
-		"int main(void) {\n"
-		"	printf(\"Hello, World!\\n\");\n"
-		"}";
+		"int data["+to_string(DATA_SIZE)+"];\n"
+		"int* p=data;\n"
+		"int main(void)\n{\n";
 	
-	//transpileFile(filename);
+	out+=transpileFile(infilename);
+	
+	out+="}";
+	
+	//cout << "code:" << endl << endl << out << endl << endl;
 	
 	writeFile(outSourceFile, out, false);
 	
@@ -59,8 +63,6 @@ string transpileFile(string filename)
 	
 	currentFIle = getDirOfPath(currentFIle)+filename;
 	
-	cout << currentFIle << endl;
-	
 	loadFile(currentFIle, code, false);
 	
 	if (code.empty())
@@ -69,85 +71,51 @@ string transpileFile(string filename)
 		exit(-1);
 	}
 	
-	string out=transpileCode(code, 0);
+	int i=0;
+	string out=transpileCode(code, i);
 	
 	currentFIle = oldCurrentFile;
 	
 	return out;
 }
 
-string transpileCode(string& code, int start)
+string transpileCode(string& code, int& i)
 {
-	/*
-	int i=start;
-	bool quit=false;
+	string out="";
 	
-	while (i<(int)code.size() && !quit)
+	for (; i<int(code.size()) && code[i]!=']'; i++)
 	{
-		bool comment=false;
-		
 		switch (code[i])
 		{
 		case '<':
-			offset--;
-			if (offset<0)
-			{
-				cout << endl << "you went too far left" << endl;
-				exit(-1);
-			}
-			min=std::min(min, offset);
+			out+="p--;\n";
 			break;
 			
 		case '>':
-			offset++;
-			if (offset>=DATA_SIZE)
-			{
-				cout << endl << "you went too far right" << endl;
-				exit(-1);
-			}
-			max=std::max(max, offset);
+			out+="p++;\n";
 			break;
 			
 		case '+':
-			data[offset]++;
+			out+="(*p)++;\n";
 			break;
 			
 		case '-':
-			data[offset]--;
+			out+="(*p)--;\n";
 			break;
 			
 		case '.':
-			putchar(data[offset]);
+			out+="putchar(*p);\n";
 			break;
 			
 		case ',':
-			data[offset]=getchar();
+			out+="*p=getchar();\n";
 			break;
 			
 		case '[':
-			if (data[offset])
-			{
-				i=runCode(code, i+1);
-				i--;
-			}
-			else
-			{
-				i=findMatchingBrase(code, i);
-				i--;
-			}
-			break;
-			
-		case ']':
-			if (data[offset])
-			{
-				i=start;
-				i--;
-			}
-			else
-			{
-				quit=true;
-				break;
-			}
+			out+="while (*p)\n{\n";
+			i++;
+			out+=transpileCode(code, i);
+			out+="}\n";
 			break;
 			
 		case '"':
@@ -164,30 +132,17 @@ string transpileCode(string& code, int start)
 			
 			{
 				string filename=code.substr(i+1, j-i-1);
-			
-				runFile(filename);
+				out+=transpileFile(filename);
 			}
-			
 			i=j;
 			break;
 			
 		default:
-			comment=true;
 			break;
 		}
-		
-		if (!comment && debug)
-		{
-			showDebug(code[i]);
-		}
-		
-		i++;
 	}
 	
-	return i;
-	*/
-	
-	return "//this is some code\n";
+	return out;
 }
 
 int findMatchingBrase(string& code, int start)

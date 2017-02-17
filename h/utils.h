@@ -4,6 +4,7 @@ using std::vector;
 
 #include <string>
 using std::string;
+using std::to_string;
 
 #include <iostream>
 using std::cout;
