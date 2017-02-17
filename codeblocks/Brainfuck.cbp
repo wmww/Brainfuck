@@ -40,7 +40,11 @@
 		<Unit filename="../bf/reverse_string.bf" />
 		<Unit filename="../bf/save_bmp.bf" />
 		<Unit filename="../bf/src.bf" />
+		<Unit filename="../h/Optimizer.h" />
 		<Unit filename="../h/utils.h" />
+		<Unit filename="../src/Optimizer.cpp">
+			<Option target="transpile" />
+		</Unit>
 		<Unit filename="../src/interpreter.cpp">
 			<Option target="interpret" />
 		</Unit>

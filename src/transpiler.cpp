@@ -1,4 +1,5 @@
 #include "../h/utils.h"
+#include "../h/Optimizer.h"
 
 const int DATA_SIZE=600000;
 
@@ -71,8 +72,23 @@ string transpileFile(string filename)
 		exit(-1);
 	}
 	
-	int i=0;
-	string out=transpileCode(code, i);
+	//int i=0;
+	//string out="";
+	//string out=transpileCode(code, i);
+	
+	/*while(i<int(code.size()))
+	{
+		out+=getNextBlock(code, i);
+	}*/
+	
+	Optimizer optimizer;
+	
+	for (int i=0; i<int(code.size()); i++)
+	{
+		optimizer.add(code[i]);
+	}
+	
+	string out=optimizer.getC();
 	
 	currentFIle = oldCurrentFile;
 	
