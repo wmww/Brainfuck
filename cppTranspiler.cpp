@@ -24,7 +24,8 @@ int min=offset, max=offset;
 
 const bool debug=false;
 
-bool loadFile(string filename, string& contents, bool debug);
+bool loadFile(string filename, string& contents, bool debug=false);
+bool writeFile(string filename, string& contents, bool debug=false);
 
 int runCode(string& code, int start); //send it some source and the index after the '[', it will return the index after ']'
 void runFile(string filename);
@@ -38,6 +39,7 @@ int main(int argc, char ** argv)
 	//cout << "enter code: ";
 	
 	string filename;
+	string outFilename="bf2cpp.cpp";
 	
 	if (argc>1)
 	{
@@ -49,7 +51,10 @@ int main(int argc, char ** argv)
 		exit(0);
 	}
 	
-	runFile(filename);
+	string out = "hello there";
+	//genCppFile(filename);
+	
+	writeFile(outFilename, out, true);
 }
 
 void runFile(string filename)
@@ -254,3 +259,33 @@ bool loadFile(string filename, string& contents, bool debug)
 	}
 }
 
+bool writeFile(string filename, string& contents, bool debug)
+{
+	std::ofstream outFile;
+	
+	if (debug)
+		cout << "attempting to write to '" << filename << "'..." << endl;
+	
+	outFile.open(filename);
+	
+	if (!outFile.is_open())
+	{
+		if (debug)
+			cout << "'" << filename << "' failed to open :(" << endl;
+		return false;
+	}
+	else
+	{
+		if (debug)
+			cout << "file opended, writing to file..." << endl;
+		
+		outFile << contents;
+		
+		outFile.close();
+		
+		if (debug)
+			cout << "file reading done, '" << filename << "' closed" << endl;
+		
+		return true;
+	}
+}
