@@ -253,3 +253,4 @@ bool loadFile(string filename, string& contents, bool debug)
 		return true;
 	}
 }
+

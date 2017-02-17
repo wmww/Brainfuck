@@ -33,6 +33,7 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="cppTranspiler.cpp" />
 		<Unit filename="design.txt" />
 		<Unit filename="divide.bfuck" />
 		<Unit filename="draw_span.bfuck" />
@@ -40,6 +41,7 @@
 		<Unit filename="hello_world.bfuck" />
 		<Unit filename="lerp.bfuck" />
 		<Unit filename="main.cpp" />
+		<Unit filename="makeImage.bfuck" />
 		<Unit filename="renderer.bfuck" />
 		<Unit filename="reverse_string.bfuck" />
 		<Unit filename="save_bmp.bfuck" />
