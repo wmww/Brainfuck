@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Brainfuck" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="interpret">
+				<Option output="../brainfuck" prefix_auto="1" extension_auto="1" />
+				<Option working_dir=".." />
+				<Option object_output=".objs/interpret" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option parameters="bf/src.bf" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+			<Target title="transpile">
+				<Option output="../brainfuck" prefix_auto="1" extension_auto="1" />
+				<Option working_dir=".." />
+				<Option object_output=".objs/transpile" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option parameters="bf/src.bf" />
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+		</Compiler>
+		<Unit filename="../bf/calc_cell_size.bf" />
+		<Unit filename="../bf/divide.bf" />
+		<Unit filename="../bf/get_num.bf" />
+		<Unit filename="../bf/hello_world.bf" />
+		<Unit filename="../bf/lerp.bf" />
+		<Unit filename="../bf/reverse_string.bf" />
+		<Unit filename="../bf/save_bmp.bf" />
+		<Unit filename="../bf/src.bf" />
+		<Unit filename="../h/utils.h" />
+		<Unit filename="../src/interpreter.cpp">
+			<Option target="interpret" />
+		</Unit>
+		<Unit filename="../src/transpiler.cpp">
+			<Option target="transpile" />
+		</Unit>
+		<Unit filename="../src/utils.cpp" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

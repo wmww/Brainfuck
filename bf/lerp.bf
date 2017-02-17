@@ -22,7 +22,7 @@ each section starts at the left
 5 >>>>>[<<<->>>-]<<<<<
 
 6 >>[>>>>>>+<<<<<<-]>>>>>
-"divide.bfuck"
+"divide.bf"
 <<<<<<<
 
 7 >>>>>>[>+<-]<<<<<<

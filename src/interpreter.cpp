@@ -1,21 +1,9 @@
+#include "../h/utils.h"
+
 #include <stdio.h>
-#include <iostream>
-#include <string>
-#include <vector>
 
-#include <fstream>
-
-#include <sstream>
-using std::stringstream;
-
-using std::cout;
-using std::endl;
 using std::cin;
 using std::getline;
-
-using std::string;
-
-using std::vector;
 
 const int DATA_SIZE=600000;
 int data[DATA_SIZE]; // is auto initalized to 0 by compiler
@@ -24,12 +12,11 @@ int min=offset, max=offset;
 
 const bool debug=false;
 
-bool loadFile(string filename, string& contents, bool debug);
-
 int runCode(string& code, int start); //send it some source and the index after the '[', it will return the index after ']'
 void runFile(string filename);
 void showDebug(char lastCmd);
 int findMatchingBrase(string& code, int start);
+string currentFIle="";
 
 int main(int argc, char ** argv)
 {
@@ -56,15 +43,23 @@ void runFile(string filename)
 {
 	string code;
 	
-	loadFile(filename, code, false);
+	string oldCurrentFile = currentFIle;
+	
+	currentFIle = getDirOfPath(currentFIle)+filename;
+	
+	cout << currentFIle << endl;
+	
+	loadFile(currentFIle, code, false);
 	
 	if (code.empty())
 	{
-		cout << "could not load '" << filename << "'" << endl;
+		cout << "could not load '" << currentFIle << "'" << endl;
 		exit(-1);
 	}
 	
 	runCode(code, 0);
+	
+	currentFIle = oldCurrentFile;
 }
 
 int runCode(string& code, int start)
@@ -220,36 +215,4 @@ void showDebug(char lastCmd)
 		cout << "\t";
 	
 	cout << lastCmd << endl << endl;
-}
-
-bool loadFile(string filename, string& contents, bool debug)
-{
-	std::fstream inFile;
-	
-	if (debug)
-		cout << "attempting to open '" << filename << "'..." << endl;
-	
-	inFile.open(filename);
-	
-	if (!inFile.is_open())
-	{
-		if (debug)
-			cout << "'" << filename << "' failed to open :(" << endl;
-		return false;
-	}
-	else
-	{
-		if (debug)
-			cout << "file opended, reading file..." << endl;
-		
-		stringstream strStream;
-		strStream << inFile.rdbuf();	// read the file
-		contents = strStream.str();	// str holds the content of the file
-		inFile.close();
-		
-		if (debug)
-			cout << "file reading done, '" << filename << "' closed" << endl;
-		
-		return true;
-	}
 }

@@ -1,21 +1,4 @@
-#include <stdio.h>
-#include <iostream>
-#include <string>
-#include <vector>
-
-#include <fstream>
-
-#include <sstream>
-using std::stringstream;
-
-using std::cout;
-using std::endl;
-using std::cin;
-using std::getline;
-
-using std::string;
-
-using std::vector;
+#include "../h/utils.h"
 
 const int DATA_SIZE=600000;
 int data[DATA_SIZE]; // is auto initalized to 0 by compiler
@@ -23,9 +6,6 @@ int offset=0;
 int min=offset, max=offset;
 
 const bool debug=false;
-
-bool loadFile(string filename, string& contents, bool debug=false);
-bool writeFile(string filename, string& contents, bool debug=false);
 
 int runCode(string& code, int start); //send it some source and the index after the '[', it will return the index after ']'
 void runFile(string filename);
@@ -225,67 +205,4 @@ void showDebug(char lastCmd)
 		cout << "\t";
 	
 	cout << lastCmd << endl << endl;
-}
-
-bool loadFile(string filename, string& contents, bool debug)
-{
-	std::fstream inFile;
-	
-	if (debug)
-		cout << "attempting to open '" << filename << "'..." << endl;
-	
-	inFile.open(filename);
-	
-	if (!inFile.is_open())
-	{
-		if (debug)
-			cout << "'" << filename << "' failed to open :(" << endl;
-		return false;
-	}
-	else
-	{
-		if (debug)
-			cout << "file opended, reading file..." << endl;
-		
-		stringstream strStream;
-		strStream << inFile.rdbuf();	// read the file
-		contents = strStream.str();	// str holds the content of the file
-		inFile.close();
-		
-		if (debug)
-			cout << "file reading done, '" << filename << "' closed" << endl;
-		
-		return true;
-	}
-}
-
-bool writeFile(string filename, string& contents, bool debug)
-{
-	std::ofstream outFile;
-	
-	if (debug)
-		cout << "attempting to write to '" << filename << "'..." << endl;
-	
-	outFile.open(filename);
-	
-	if (!outFile.is_open())
-	{
-		if (debug)
-			cout << "'" << filename << "' failed to open :(" << endl;
-		return false;
-	}
-	else
-	{
-		if (debug)
-			cout << "file opended, writing to file..." << endl;
-		
-		outFile << contents;
-		
-		outFile.close();
-		
-		if (debug)
-			cout << "file reading done, '" << filename << "' closed" << endl;
-		
-		return true;
-	}
 }
