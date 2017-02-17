@@ -64,7 +64,7 @@ put 76800 aka 320x240 aka 8x8x5x8x6x5 in the 2nd cell and leave off on it
 	
 	>+++.>+++++.>++++++.<<<			write three colors
 	
-	[>>>>+<<<<-]>>>>-	move one minus the current location to 4 spots over
+	[>>>>+<<<<-]>>>>-				move one minus the current location to 4 spots over
 ]
 
 

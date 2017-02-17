@@ -1,16 +1,14 @@
 #include "../h/utils.h"
 
 const int DATA_SIZE=600000;
-int data[DATA_SIZE]; // is auto initalized to 0 by compiler
-int offset=0;
-int min=offset, max=offset;
 
 const bool debug=false;
 
-int runCode(string& code, int start); //send it some source and the index after the '[', it will return the index after ']'
-void runFile(string filename);
+int transpileCode(string& code, int start); //send it some source and the index after the '[', it will return the index after ']'
+void transpileFile(string filename);
 void showDebug(char lastCmd);
 int findMatchingBrase(string& code, int start);
+string currentFIle="";
 
 int main(int argc, char ** argv)
 {
@@ -19,7 +17,6 @@ int main(int argc, char ** argv)
 	//cout << "enter code: ";
 	
 	string filename;
-	string outFilename="bf2cpp.cpp";
 	
 	if (argc>1)
 	{
@@ -31,28 +28,35 @@ int main(int argc, char ** argv)
 		exit(0);
 	}
 	
-	string out = "hello there";
-	//genCppFile(filename);
-	
-	writeFile(outFilename, out, true);
+	runFile(filename);
 }
 
-void runFile(string filename)
+string transpileFile(string filename)
 {
 	string code;
 	
-	loadFile(filename, code, false);
+	string oldCurrentFile = currentFIle;
+	
+	currentFIle = getDirOfPath(currentFIle)+filename;
+	
+	cout << currentFIle << endl;
+	
+	loadFile(currentFIle, code, false);
 	
 	if (code.empty())
 	{
-		cout << "could not load '" << filename << "'" << endl;
+		cout << "could not load '" << currentFIle << "'" << endl;
 		exit(-1);
 	}
 	
-	runCode(code, 0);
+	string out=transpileCode(code, 0);
+	
+	currentFIle = oldCurrentFile;
+	
+	return out;
 }
 
-int runCode(string& code, int start)
+int transpileCode(string& code, int start)
 {
 	int i=start;
 	bool quit=false;
