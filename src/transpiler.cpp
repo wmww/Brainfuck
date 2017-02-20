@@ -35,8 +35,8 @@ int main(int argc, char ** argv)
 	
 	out+=
 		"#include <stdio.h>\n"
-		"int data["+to_string(DATA_SIZE)+"];\n"
-		"int* p=data;\n"
+		"int _data["+to_string(DATA_SIZE)+"];\n"
+		"int* _p=_data;\n"
 		"int main(void)\n{\n";
 	
 	out+=transpileFile(infilename);

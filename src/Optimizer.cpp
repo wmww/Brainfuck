@@ -10,63 +10,29 @@ void Optimizer::add(char c)
 	switch (c)
 	{
 	case '[':
-		stack.push_back(Block());
+		stack.push_back(LoopBlock());
 		break;
 		
 	case ']':
-		//mergeStack()
+		if (stack.size()>=2)
+		{
+			stack[stack.size()-2].mergeInto(stack[stack.size()-1]);
+			stack.pop_back();
+		}
+		else
+		{
+			cout << "']' without '['" << endl;
+		}
 		break;
+		
+	default:
+		stack.back().add(c);
 	}
 }
 
 string Optimizer::getC()
 {
 	return "//hello there\n";
-}
-
-Block::Block()
-{
-	
-}
-
-void Block::add(char c)
-{
-	switch (c)
-	{
-	case '<':
-		//out+="p--;\n";
-		break;
-		
-	case '>':
-		//out+="p++;\n";
-		break;
-		
-	case '+':
-		//out+="(*p)++;\n";
-		break;
-		
-	case '-':
-		//out+="(*p)--;\n";
-		break;
-		
-	case '.':
-		//out+="putchar(*p);\n";
-		break;
-		
-	case ',':
-		//out+="*p=getchar();\n";
-		break;
-		
-	case '[':
-		//out+="while (*p)\n{\n";
-		//i++;
-		//out+=transpileCode(code, i);
-		//out+="}\n";
-		break;
-	
-	default:
-		break;
-	}
 }
 
 

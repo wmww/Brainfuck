@@ -1,6 +1,6 @@
 #include <stdio.h>
-int data[600000];
-int* p=data;
+int _data[600000];
+int* _p=_data;
 int main(void)
 {
 //hello there

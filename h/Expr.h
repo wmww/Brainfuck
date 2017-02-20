@@ -14,14 +14,17 @@ private:
 
 typedef shared_ptr<VariableBase> Variable;
 
-Variable newVariable();
+Variable makeVariable();
 
 class ExprBase
 {
 public:
 	virtual string getC()=0;
+	virtual bool isLiteral() {return false;}
 };
 
 typedef unique_ptr<ExprBase> Expr;
 
-Expr newExprLiteral(int val);
+Expr makeExprLiteral(int val);
+Expr makeExprVariable(Variable val);
+Expr makeExprSum(Expr a, Expr b);
