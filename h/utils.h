@@ -11,6 +11,10 @@ using std::to_string;
 using std::cout;
 using std::endl;
 
+#include <memory>
+using std::unique_ptr;
+using std::shared_ptr;
+
 bool loadFile(string filename, string& contents, bool debug=false);
 bool writeFile(string filename, string& contents, bool debug=false);
 

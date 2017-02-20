@@ -40,8 +40,10 @@
 		<Unit filename="../bf/reverse_string.bf" />
 		<Unit filename="../bf/save_bmp.bf" />
 		<Unit filename="../bf/src.bf" />
+		<Unit filename="../h/Expr.h" />
 		<Unit filename="../h/Optimizer.h" />
 		<Unit filename="../h/utils.h" />
+		<Unit filename="../src/Expr.cpp" />
 		<Unit filename="../src/Optimizer.cpp">
 			<Option target="transpile" />
 		</Unit>

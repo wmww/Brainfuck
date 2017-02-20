@@ -43,7 +43,7 @@ int main(int argc, char ** argv)
 	
 	out+="}";
 	
-	//cout << "code:" << endl << endl << out << endl << endl;
+	cout << "code:" << endl << endl << out << endl << endl;
 	
 	writeFile(outSourceFile, out, false);
 	
