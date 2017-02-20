@@ -11,5 +11,6 @@ public:
 
 typedef shared_ptr<ActionBase> Action;
 
-Action makeActionAdd(Expr val, Expr pos);
+Action makeActionAdd(Expr pos, Expr val);
+Action makeActionOut(Expr pos);
 

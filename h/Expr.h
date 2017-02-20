@@ -23,8 +23,8 @@ public:
 	virtual bool isLiteral() {return false;}
 };
 
-typedef unique_ptr<ExprBase> Expr;
+typedef shared_ptr<ExprBase> Expr;
 
-Expr makeExprLiteral(int val);
-Expr makeExprVariable(Variable val);
-Expr makeExprSum(Expr a, Expr b);
+Expr expr(int val);
+Expr expr(Variable val);
+Expr sum(Expr a, Expr b);

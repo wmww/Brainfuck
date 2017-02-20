@@ -11,5 +11,5 @@ public:
 	string getC();
 	
 private:
-	vector<LoopBlock> stack{LoopBlock()};
+	vector<LoopBlock> stack{LoopBlock(expr(0))};
 };

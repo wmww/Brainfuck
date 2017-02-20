@@ -10,7 +10,7 @@ void Optimizer::add(char c)
 	switch (c)
 	{
 	case '[':
-		stack.push_back(LoopBlock());
+		stack.push_back(LoopBlock(stack.back().pos));
 		break;
 		
 	case ']':
@@ -32,7 +32,20 @@ void Optimizer::add(char c)
 
 string Optimizer::getC()
 {
-	return "//hello there\n";
+	if (stack.size()>1)
+	{
+		cout << "no matching ']'" << endl;
+	}
+	else if (stack.size()!=1)
+	{
+		cout << "stack of bad length" << endl;
+	}
+	else
+	{
+		return stack[0].getC();
+	}
+	
+	return "// error\n";
 }
 
 

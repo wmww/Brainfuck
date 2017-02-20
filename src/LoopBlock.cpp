@@ -1,9 +1,8 @@
 #include "../h/LoopBlock.h"
 
-
-LoopBlock::LoopBlock()
+LoopBlock::LoopBlock(Expr pos)
 {
-	
+	this->pos = pos;
 }
 
 void LoopBlock::add(char c)
@@ -11,34 +10,27 @@ void LoopBlock::add(char c)
 	switch (c)
 	{
 	case '<':
-		//out+="p--;\n";
+		pos=sum(expr(-1), pos);
 		break;
 		
 	case '>':
-		//out+="p++;\n";
+		pos=sum(expr(1), pos);
 		break;
 		
 	case '+':
-		//out+="(*p)++;\n";
+		add(makeActionAdd(pos, expr(1)));
 		break;
 		
 	case '-':
-		//out+="(*p)--;\n";
+		add(makeActionAdd(pos, expr(-1)));
 		break;
 		
 	case '.':
-		//out+="putchar(*p);\n";
+		add(makeActionOut(pos));
 		break;
 		
 	case ',':
-		//out+="*p=getchar();\n";
-		break;
-		
-	case '[':
-		//out+="while (*p)\n{\n";
-		//i++;
-		//out+=transpileCode(code, i);
-		//out+="}\n";
+		cout << "',' input operator not yet implemented" << endl;
 		break;
 	
 	default:
@@ -46,8 +38,25 @@ void LoopBlock::add(char c)
 	}
 }
 
+void LoopBlock::add(Action a)
+{
+	actions.push_back(a);
+}
+
 void LoopBlock::mergeInto(LoopBlock& in)
 {
 	
+}
+
+string LoopBlock::getC()
+{
+	string out="";
+	
+	for (auto i: actions)
+	{
+		out+=i->getC();
+	}
+	
+	return out;
 }
 

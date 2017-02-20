@@ -6,12 +6,12 @@
 class LoopBlock
 {
 public:
-	LoopBlock();
+	LoopBlock(Expr pos);
 	void mergeInto(LoopBlock& in);
 	void add(char c);
+	void add(Action a);
+	string getC();
 	
-private:
-	
-	int pos=0;
+	Expr pos;
 	vector<Action> actions;
 };

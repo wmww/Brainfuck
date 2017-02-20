@@ -28,7 +28,7 @@ public:
 	int val;
 };
 
-Expr makeExprLiteral(int val)
+Expr expr(int val)
 {
 	auto out = new ExprLiteral;
 	out->val = val;
@@ -48,7 +48,7 @@ public:
 	Variable val;
 };
 
-Expr makeExprVariable(Variable val)
+Expr expr(Variable val)
 {
 	auto out = new ExprVariable;
 	out->val = val;
@@ -66,11 +66,11 @@ public:
 	Expr a, b;
 };
 
-Expr makeExprSum(Expr a, Expr b)
+Expr sum(Expr a, Expr b)
 {
 	if (a->isLiteral() && b->isLiteral())
 	{
-		return makeExprLiteral(
+		return expr(
 			((ExprLiteral*)&(*a))->val
 			+
 			((ExprLiteral*)&(*b))->val
