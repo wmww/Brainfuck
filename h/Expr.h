@@ -31,3 +31,5 @@ Expr expr();
 Expr expr(int val);
 Expr expr(Variable val);
 Expr sum(Expr a, Expr b);
+Expr product(Expr a, Expr b);
+

@@ -47,7 +47,7 @@ void runFile(string filename)
 	
 	currentFIle = getDirOfPath(currentFIle)+filename;
 	
-	cout << currentFIle << endl;
+	//cout << currentFIle << endl;
 	
 	loadFile(currentFIle, code, false);
 	

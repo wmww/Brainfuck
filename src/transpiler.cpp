@@ -75,7 +75,28 @@ void transpileFile(string filename, Optimizer& optimizer)
 	
 	for (int i=0; i<int(code.size()); i++)
 	{
-		optimizer.add(code[i]);
+		if (code[i] == '"')
+		{
+			int j;
+			for (j=i+1; code[j]!='"'; j++)
+			{
+				if (j+1>=(int)code.size())
+				{
+					cout << "no closing quote" << endl;
+					exit(-1);
+				}
+			}
+			
+			{
+				string filename=code.substr(i+1, j-i-1);
+				transpileFile(filename, optimizer);
+			}
+			i=j;
+		}
+		else
+		{
+			optimizer.add(code[i]);
+		}
 	}
 	
 	currentFIle = oldCurrentFile;

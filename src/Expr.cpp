@@ -99,3 +99,35 @@ Expr sum(Expr a, Expr b)
 		return Expr(out);
 	}
 }
+
+
+class ExprProduct: public ExprBase
+{
+public:
+	string getC()
+	{
+		return "(" + a->getC() + " * " + b->getC() + ")";
+	}
+	
+	Expr a, b;
+};
+
+Expr product(Expr a, Expr b)
+{
+	if (a->isLiteral() && b->isLiteral())
+	{
+		return expr(
+			((ExprLiteral*)&(*a))->val
+			*
+			((ExprLiteral*)&(*b))->val
+		);
+	}
+	else
+	{
+		auto out = new ExprSum;
+		out->a = move(a);
+		out->b = move(b);
+		return Expr(out);
+	}
+}
+

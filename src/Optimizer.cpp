@@ -7,6 +7,8 @@ Optimizer::Optimizer()
 
 void Optimizer::add(char c)
 {
+	//cout << "adding " << c << " to optimizer" << endl;
+	
 	switch (c)
 	{
 	case '[':
