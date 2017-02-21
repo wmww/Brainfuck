@@ -14,7 +14,24 @@ public:
 		{
 			for (auto j: i.second)
 			{
-				out+=" _ ";
+				switch (j.type)
+				{
+				case ACTION_ADD:
+					if (!j.val->isZero())
+						out += "_p[" + to_string(i.first) + "] += " + j.val->getC() + ";\n";
+					break;
+				
+				case ACTION_OUT:
+					out += "putchar((char)_p[" + to_string(i.first) + "]);\n";
+					break;
+					
+				case ACTION_IN:
+					out += "_p[" + to_string(i.first) + "] = getchar();\n";
+					break;
+				
+				default:
+					cout << "invalid sub action type" << endl;
+				}
 			}
 		}
 		
@@ -57,14 +74,23 @@ class ActionLoop: public ActionBase
 public:
 	string getC()
 	{
-		return
-			"\n_p += " + to_string(offset) + ";\n"
-			+ "while (*_p)\n{\n"
-			+ indentString(
-				loop->getC() + "_p += " + to_string(loop->pos) + ";\n"
-			)
-			+ "}\n\n";
-		;
+		string out = "";
+		
+		out += "\n";
+		
+		if (offset != 0)
+			out += "_p += " + to_string(offset) + ";\n";
+		
+		out += "while (*_p)\n{\n";
+		
+		out += indentString(loop->getC());
+		
+		if (loop->pos != 0)
+			out += indentString("_p += " + to_string(loop->pos) + ";\n");
+		
+		out += "}\n\n";
+		
+		return out;
 	}
 	
 	LoopBlock loop=0;

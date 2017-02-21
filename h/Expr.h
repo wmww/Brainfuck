@@ -21,6 +21,7 @@ class ExprBase
 public:
 	virtual string getC()=0;
 	virtual bool isLiteral() {return false;}
+	virtual bool isZero() {return false;}
 	virtual bool equals(shared_ptr<ExprBase> other) {return false;}
 };
 
