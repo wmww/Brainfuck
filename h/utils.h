@@ -15,6 +15,8 @@ using std::endl;
 using std::unique_ptr;
 using std::shared_ptr;
 
+string indentString(const string& in, string indent="\t");
+
 bool loadFile(string filename, string& contents, bool debug=false);
 bool writeFile(string filename, string& contents, bool debug=false);
 

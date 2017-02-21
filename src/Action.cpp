@@ -62,9 +62,9 @@ public:
 	string getC()
 	{
 		return
-			"while (*_p)\n{\n"
-			+ loop->getC() +
-			"}\n";
+			"\nwhile (*_p)\n{\n"
+			+ indentString(loop->getC()) +
+			"}\n\n";
 		;
 	}
 	

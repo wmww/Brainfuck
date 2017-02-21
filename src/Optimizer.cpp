@@ -50,7 +50,7 @@ string Optimizer::getC()
 			"int* _p = _data;\n"
 			"int main(void)\n{\n";
 		
-		out += stack[0]->getC();
+		out += indentString(stack[0]->getC());
 		
 		out += "}\n";
 		

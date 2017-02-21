@@ -16,10 +16,14 @@ void LoopBlockBase::add(char c)
 	{
 	case '<':
 		pos=sum(expr(-1), pos);
+		//zeroPos();
+		//add(makeActionShift(expr(-1)));
 		break;
 		
 	case '>':
 		pos=sum(expr(1), pos);
+		//zeroPos();
+		//add(makeActionShift(expr(1)));
 		break;
 		
 	case '+':
@@ -51,6 +55,7 @@ void LoopBlockBase::add(Action a)
 void LoopBlockBase::mergeFrom(LoopBlock src)
 {
 	zeroPos();
+	src->zeroPos();
 	actions.push_back(makeActionLoop(src));
 }
 
