@@ -1,6 +1,85 @@
 #include "../h/Action.h"
 #include "../h/LoopBlock.h"
+#include <map>
 
+class ActionMapAdd: public ActionBase
+{
+public:
+	
+	string getC()
+	{
+		string out;
+		
+		for (auto i: data)
+		{
+			for (auto j: i.second)
+			{
+				out+=" _ ";
+			}
+		}
+		
+		return out;
+	}
+	
+	bool isMapAdd() {return true;}
+	
+	void addSubAction(int pos, SubActionType type, Expr val)
+	{
+		vector<SubAction>& elem = data[pos];
+		if (type==ACTION_ADD && !elem.empty() && elem.back().type==ACTION_ADD)
+		{
+			elem.back().val = sum(elem.back().val, val);
+		}
+		else
+		{
+			data[pos].push_back(SubAction{type, val});
+		}
+	}
+	
+	struct SubAction
+	{
+		SubActionType type;
+		Expr val;
+	};
+	
+	std::map<int, vector<SubAction> > data;
+};
+
+Action makeActionMapAdd()
+{
+	auto out = new ActionMapAdd;
+	return Action(out);
+}
+
+
+class ActionLoop: public ActionBase
+{
+public:
+	string getC()
+	{
+		return
+			"\n_p += " + to_string(offset) + ";\n"
+			+ "while (*_p)\n{\n"
+			+ indentString(
+				loop->getC() + "_p += " + to_string(loop->pos) + ";\n"
+			)
+			+ "}\n\n";
+		;
+	}
+	
+	LoopBlock loop=0;
+	int offset;
+};
+
+Action makeActionLoop(LoopBlock loop, int offset)
+{
+	auto out = new ActionLoop;
+	out->loop = loop;
+	out->offset = offset;
+	return Action(out);
+}
+
+/*
 class ActionAdd: public ActionBase
 {
 public:
@@ -9,7 +88,7 @@ public:
 		return "_p[" + to_string(pos) + "] += " + val->getC() + ";\n";
 	}
 	
-	/*MergeStatus attemptMerge(shared_ptr<ActionBase> in)
+	MergeStatus attemptMerge(shared_ptr<ActionBase> in)
 	{
 		if (in->isActionAdd())
 		{
@@ -27,7 +106,7 @@ public:
 		{
 			return FAILURE;
 		}
-	}*/
+	}
 	
 	Expr val=0;
 	int pos=0;
@@ -72,26 +151,6 @@ public:
 		return "putchar((char)_p[" + to_string(pos) + "]);\n";
 	}
 	
-	/*MergeStatus attemptMerge(shared_ptr<ActionBase> in)
-	{
-		if (in->isActionAdd())
-		{
-			if (((ActionAdd*)&(*in))->pos->equals(pos))
-			{
-				val = sum(((ActionAdd*)&(*in))->val, val);
-				return SUCCESS;
-			}
-			else
-			{
-				return FAILURE;
-			}
-		}
-		else
-		{
-			return FAILURE;
-		}
-	}*/
-	
 	int pos=0;
 };
 
@@ -128,4 +187,4 @@ Action makeActionLoop(LoopBlock loop, int offset)
 	out->offset = offset;
 	return Action(out);
 }
-
+*/

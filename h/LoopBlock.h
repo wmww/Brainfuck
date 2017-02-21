@@ -10,6 +10,7 @@ public:
 	void mergeFrom(shared_ptr<LoopBlockBase> src);
 	void add(char c);
 	void add(Action a);
+	void addToCell(SubActionType type, Expr val);
 	void zeroPos();
 	void shiftPos(int dist);
 	string getC();

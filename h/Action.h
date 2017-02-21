@@ -3,28 +3,34 @@
 #include "utils.h"
 #include "Expr.h"
 
+enum SubActionType
+{
+	ACTION_ADD,
+	ACTION_OUT,
+	ACTION_IN,
+};
+
 class ActionBase
 {
 public:
 	virtual string getC()=0;
 	
-	enum MergeStatus
+	// if this is not a map add action, this will error
+	virtual void addSubAction(int pos, SubActionType type, Expr expr)
 	{
-		SUCCESS,
-		FAILURE,
-		BLOCKED, 
-	};
+		cout << "addSubAction() called on action other then add map" << endl;
+	}
 	
-	//virtual MergeStatus attemptMerge(shared_ptr<ActionBase> in) {return FAILURE;};
-	
-	virtual bool isActionAdd() {return false;}
+	virtual bool isMapAdd() {return false;}
 };
 
 typedef shared_ptr<ActionBase> Action;
 
-Action makeActionAdd(int pos, Expr val);
+//Action makeActionAdd(int pos, Expr val);
 //Action makeActionShift(int val);
-Action makeActionOut(int pos);
+//Action makeActionOut(int pos);
+
+Action makeActionMapAdd();
 
 class LoopBlockBase;
 Action makeActionLoop(shared_ptr<LoopBlockBase> loop, int offset);

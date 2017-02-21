@@ -26,6 +26,7 @@ public:
 
 typedef shared_ptr<ExprBase> Expr;
 
+Expr expr();
 Expr expr(int val);
 Expr expr(Variable val);
 Expr sum(Expr a, Expr b);

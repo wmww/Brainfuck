@@ -40,6 +40,11 @@ Expr expr(int val)
 	return Expr(out);
 }
 
+Expr expr()
+{
+	return expr(0);
+}
+
 
 
 class ExprVariable: public ExprBase

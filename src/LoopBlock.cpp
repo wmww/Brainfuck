@@ -31,19 +31,23 @@ void LoopBlockBase::add(char c)
 		break;
 		
 	case '+':
-		add(makeActionAdd(pos, expr(1)));
+		//add(makeActionAdd(pos, expr(1)));
+		addToCell(ACTION_ADD, expr(1));
 		break;
 		
 	case '-':
-		add(makeActionAdd(pos, expr(-1)));
+		//add(makeActionAdd(pos, expr(-1)));
+		addToCell(ACTION_ADD, expr(-1));
 		break;
 		
 	case '.':
-		add(makeActionOut(pos));
+		//add(makeActionOut(pos));
+		addToCell(ACTION_OUT, expr());
 		break;
 		
 	case ',':
-		cout << "',' input operator not yet implemented" << endl;
+		//cout << "',' input operator not yet implemented" << endl;
+		addToCell(ACTION_IN, expr());
 		break;
 	
 	default:
@@ -54,6 +58,16 @@ void LoopBlockBase::add(char c)
 void LoopBlockBase::add(Action a)
 {
 	actions.push_back(a);
+}
+
+void LoopBlockBase::addToCell(SubActionType type, Expr val)
+{
+	if (actions.empty() || !actions.back()->isMapAdd())
+	{
+		actions.push_back(makeActionMapAdd());
+	}
+	
+	actions.back()->addSubAction(pos, type, val);
 }
 
 void LoopBlockBase::mergeFrom(LoopBlock src)
