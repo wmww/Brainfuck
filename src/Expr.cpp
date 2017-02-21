@@ -25,6 +25,11 @@ public:
 	
 	bool isLiteral() {return true;}
 	
+	bool equals(Expr other)
+	{
+		return (other->isLiteral() && (((ExprLiteral*)&(*other))->val == val));
+	}
+	
 	int val;
 };
 

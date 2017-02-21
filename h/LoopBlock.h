@@ -11,9 +11,11 @@ public:
 	void add(char c);
 	void add(Action a);
 	void zeroPos();
+	void shiftPos(int dist);
 	string getC();
 	
-	Expr pos;
+	int pos;
+	//int totalOffset;
 	vector<Action> actions;
 };
 

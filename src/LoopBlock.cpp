@@ -7,7 +7,11 @@ LoopBlock makeLoopBlock()
 
 LoopBlockBase::LoopBlockBase()
 {
-	this->pos = expr(0);
+	//this->pos = expr(0);
+	//this->totalOffset = expr(0);
+	
+	pos = 0;
+	//totalOffset = 0;
 }
 
 void LoopBlockBase::add(char c)
@@ -15,13 +19,13 @@ void LoopBlockBase::add(char c)
 	switch (c)
 	{
 	case '<':
-		pos=sum(expr(-1), pos);
+		shiftPos(-1);
 		//zeroPos();
 		//add(makeActionShift(expr(-1)));
 		break;
 		
 	case '>':
-		pos=sum(expr(1), pos);
+		shiftPos(1);
 		//zeroPos();
 		//add(makeActionShift(expr(1)));
 		break;
@@ -54,15 +58,24 @@ void LoopBlockBase::add(Action a)
 
 void LoopBlockBase::mergeFrom(LoopBlock src)
 {
-	zeroPos();
-	src->zeroPos();
-	actions.push_back(makeActionLoop(src));
+	//zeroPos();
+	//src->zeroPos();
+	actions.push_back(makeActionLoop(src, pos));
+	pos = 0;
 }
 
+/*
 void LoopBlockBase::zeroPos()
 {
 	actions.push_back(makeActionShift(pos));
-	pos = expr(0);
+	pos = 0;
+}
+*/
+
+void LoopBlockBase::shiftPos(int dist)
+{
+	pos += dist;
+	//totalOffset += dist;
 }
 
 string LoopBlockBase::getC()
