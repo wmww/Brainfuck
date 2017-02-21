@@ -1,12 +1,10 @@
 #include "../h/utils.h"
 #include "../h/Optimizer.h"
 
-const int DATA_SIZE=600000;
-
 const bool debug=false;
 
 string transpileCode(string& code, int& i); //send it some source and the index after the '[', it will return the index after ']'
-string transpileFile(string filename);
+void transpileFile(string filename, Optimizer& optimizer);
 void showDebug(char lastCmd);
 int findMatchingBrase(string& code, int start);
 string currentFIle="";
@@ -31,16 +29,11 @@ int main(int argc, char ** argv)
 		exit(0);
 	}
 	
-	string out = "";
+	Optimizer optimizer;
 	
-	out+=
-		"#include <stdio.h>\n"
-		"int _data["+to_string(DATA_SIZE)+"];\n"
-		"int main(void)\n{\n";
+	transpileFile(infilename, optimizer);
 	
-	out+=transpileFile(infilename);
-	
-	out+="}";
+	string out = optimizer.getC();
 	
 	cout << "code:" << endl << endl << out << endl << endl;
 	
@@ -55,7 +48,7 @@ int main(int argc, char ** argv)
 	cout << cmdOut << endl;
 }
 
-string transpileFile(string filename)
+void transpileFile(string filename, Optimizer& optimizer)
 {
 	string code;
 	
@@ -80,21 +73,15 @@ string transpileFile(string filename)
 		out+=getNextBlock(code, i);
 	}*/
 	
-	Optimizer optimizer;
-	
 	for (int i=0; i<int(code.size()); i++)
 	{
 		optimizer.add(code[i]);
 	}
 	
-	string out=optimizer.getC();
-	
 	currentFIle = oldCurrentFile;
-	
-	return out;
 }
 
-string transpileCode(string& code, int& i)
+string transpileCode(string& code, int& i, Optimizer& optimizer)
 {
 	string out="";
 	
@@ -129,7 +116,7 @@ string transpileCode(string& code, int& i)
 		case '[':
 			out+="while (*p)\n{\n";
 			i++;
-			out+=transpileCode(code, i);
+			out+=transpileCode(code, i, optimizer);
 			out+="}\n";
 			break;
 			
@@ -147,7 +134,7 @@ string transpileCode(string& code, int& i)
 			
 			{
 				string filename=code.substr(i+1, j-i-1);
-				out+=transpileFile(filename);
+				transpileFile(filename, optimizer);
 			}
 			i=j;
 			break;

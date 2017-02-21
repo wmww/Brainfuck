@@ -10,13 +10,13 @@ void Optimizer::add(char c)
 	switch (c)
 	{
 	case '[':
-		stack.push_back(LoopBlock(stack.back().pos));
+		stack.push_back(makeLoopBlock());
 		break;
 		
 	case ']':
 		if (stack.size()>=2)
 		{
-			stack[stack.size()-2].mergeInto(stack[stack.size()-1]);
+			stack[stack.size()-2]->mergeFrom(stack[stack.size()-1]);
 			stack.pop_back();
 		}
 		else
@@ -26,7 +26,7 @@ void Optimizer::add(char c)
 		break;
 		
 	default:
-		stack.back().add(c);
+		stack.back()->add(c);
 	}
 }
 
@@ -42,7 +42,19 @@ string Optimizer::getC()
 	}
 	else
 	{
-		return stack[0].getC();
+		string out="";
+		
+		out+=
+			"#include <stdio.h>\n"
+			"int _data["+to_string(DATA_SIZE)+"];\n"
+			"int* _p = _data;\n"
+			"int main(void)\n{\n";
+		
+		out += stack[0]->getC();
+		
+		out += "}\n";
+		
+		return out;
 	}
 	
 	return "// error\n";

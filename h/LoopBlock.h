@@ -3,15 +3,20 @@
 #include "utils.h"
 #include "Action.h"
 
-class LoopBlock
+class LoopBlockBase
 {
 public:
-	LoopBlock(Expr pos);
-	void mergeInto(LoopBlock& in);
+	LoopBlockBase();
+	void mergeFrom(shared_ptr<LoopBlockBase> src);
 	void add(char c);
 	void add(Action a);
+	void zeroPos();
 	string getC();
 	
 	Expr pos;
 	vector<Action> actions;
 };
+
+typedef shared_ptr<LoopBlockBase> LoopBlock;
+
+LoopBlock makeLoopBlock();

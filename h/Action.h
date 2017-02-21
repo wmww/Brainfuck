@@ -12,5 +12,9 @@ public:
 typedef shared_ptr<ActionBase> Action;
 
 Action makeActionAdd(Expr pos, Expr val);
+Action makeActionShift(Expr val);
 Action makeActionOut(Expr pos);
+
+class LoopBlockBase;
+Action makeActionLoop(shared_ptr<LoopBlockBase> loop);
 

@@ -3,6 +3,8 @@
 #include "utils.h"
 #include "LoopBlock.h"
 
+const int DATA_SIZE=600000;
+
 class Optimizer
 {
 public:
@@ -11,5 +13,5 @@ public:
 	string getC();
 	
 private:
-	vector<LoopBlock> stack{LoopBlock(expr(0))};
+	vector<LoopBlock> stack{makeLoopBlock()};
 };

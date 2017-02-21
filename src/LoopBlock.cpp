@@ -1,11 +1,16 @@
 #include "../h/LoopBlock.h"
 
-LoopBlock::LoopBlock(Expr pos)
+LoopBlock makeLoopBlock()
 {
-	this->pos = pos;
+	return LoopBlock(new LoopBlockBase());
 }
 
-void LoopBlock::add(char c)
+LoopBlockBase::LoopBlockBase()
+{
+	this->pos = expr(0);
+}
+
+void LoopBlockBase::add(char c)
 {
 	switch (c)
 	{
@@ -38,17 +43,24 @@ void LoopBlock::add(char c)
 	}
 }
 
-void LoopBlock::add(Action a)
+void LoopBlockBase::add(Action a)
 {
 	actions.push_back(a);
 }
 
-void LoopBlock::mergeInto(LoopBlock& in)
+void LoopBlockBase::mergeFrom(LoopBlock src)
 {
-	
+	zeroPos();
+	actions.push_back(makeActionLoop(src));
 }
 
-string LoopBlock::getC()
+void LoopBlockBase::zeroPos()
+{
+	actions.push_back(makeActionShift(pos));
+	pos = expr(0);
+}
+
+string LoopBlockBase::getC()
 {
 	string out="";
 	
