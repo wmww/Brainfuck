@@ -20,6 +20,7 @@ class ExprBase
 {
 public:
 	virtual string getC()=0;
+	virtual bool isIdk() {return false;}
 	virtual bool isLiteral() {return false;}
 	virtual bool isZero() {return false;}
 	virtual bool equals(shared_ptr<ExprBase> other) {return false;}
@@ -28,7 +29,9 @@ public:
 typedef shared_ptr<ExprBase> Expr;
 
 Expr expr();
+Expr exprIdk();
 Expr expr(int val);
+Expr exprFromData(int pos, int * offset);
 Expr expr(Variable val);
 Expr sum(Expr a, Expr b);
 Expr product(Expr a, Expr b);

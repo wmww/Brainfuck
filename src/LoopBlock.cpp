@@ -97,7 +97,7 @@ void LoopBlockBase::mergeFrom(LoopBlock src)
 	else
 	*/
 	{
-		actions.push_back(makeActionLoop(src, pos, -1));
+		actions.push_back(makeActionLoop(src, pos));
 		pos = 0;
 	}
 }
@@ -125,15 +125,32 @@ bool LoopBlockBase::canUnroll()
 		}
 	}
 	
+	if (!getNetChangeToPos(0)->isLiteral())
+	{
+		return false;
+	}
+	
 	return true;
 }
 
-void LoopBlockBase::unroll(int offset, int iters)
+void LoopBlockBase::unroll(int offset)
 {
 	for (auto i: actions)
 	{
-		i->unroll(offset, iters);
+		i->unroll(offset);
 	}
+}
+
+Expr LoopBlockBase::getNetChangeToPos(int i)
+{
+	Expr a = expr(0);
+	
+	for (auto i: actions)
+	{
+		a = sum(a, i->getNetChangeToPos(0));
+	}
+	
+	return a;
 }
 
 void LoopBlockBase::shiftPos(int dist)

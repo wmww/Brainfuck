@@ -75,7 +75,7 @@ public:
 	
 	bool canUnroll() {return onlyHasAddSubsBool;}
 	
-	void unroll(int offset, int iters)
+	void unroll(int offset)
 	{
 		this->offset += offset;
 		
@@ -86,7 +86,7 @@ public:
 				switch (j.type)
 				{
 				case ACTION_ADD:
-					j.val = product(j.val, expr(iters));
+					j.val = product(j.val, exprFromData(offset, &offset));
 					break;
 					
 				case ACTION_SET:
@@ -99,6 +99,30 @@ public:
 				}
 			}
 		}
+	}
+	
+	Expr getNetChangeToPos(int i)
+	{
+		Expr val = expr(0);
+		
+		auto subs = data.find(i);
+		
+		if (subs != data.end())
+		{
+			for (auto i: subs->second)
+			{
+				if (i.type == ACTION_SET)
+				{
+					val = i.val;
+				}
+				else if (i.type == ACTION_ADD)
+				{
+					val = sum(val, i.val);
+;				}
+			}
+		}
+		
+		return val;
 	}
 	
 	/*
@@ -168,12 +192,19 @@ public:
 		return out;
 	}
 	
-	bool canUnroll() {return loop->canUnroll();}
+	//bool canUnroll() {return loop->canUnroll();}
+	bool canUnroll() {return false;}
 	
-	void unroll(int offset, int iters)
+	void unroll(int offset, Expr iters)
 	{
+		cout << "ActionUnrolled unrolling not implemented" << endl;
 		//offset += offset;
-		loop->unroll(offset, iters);
+		//loop->unroll(offset, iters);
+	}
+	
+	Expr getNetChangeToPos(int i)
+	{
+		return loop->getNetChangeToPos(i);
 	}
 	
 	LoopBlock loop = nullptr;
@@ -214,17 +245,22 @@ public:
 		return out;
 	}
 	
+	Expr getNetChangeToPos(int i)
+	{
+		return exprIdk();
+	}
+	
 	LoopBlock loop=0;
 	int offset;
 };
 
-Action makeActionLoop(LoopBlock loop, int offset, int iters)
+Action makeActionLoop(LoopBlock loop, int offset)
 {
-	if (loop->canUnroll() && iters>=0)
+	if (loop->canUnroll())
 	{
 		auto out = new ActionUnrolled;
-		auto var = makeVariable();
-		loop->unroll(offset, iters);
+		//auto var = makeVariable();
+		loop->unroll(offset);
 		out->loop = loop;
 		return Action(out);
 	}

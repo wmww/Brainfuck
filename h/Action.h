@@ -26,7 +26,9 @@ public:
 	
 	virtual bool canUnroll() {return false;}
 	
-	virtual void unroll(int offset, int iters) {cout << "called unroll on an action that can't be unrolled" << endl;};
+	virtual void unroll(int offset) {cout << "called unroll on an action that can't be unrolled" << endl;};
+	
+	virtual Expr getNetChangeToPos(int i) {return exprIdk();};
 	
 	// if this is not a map add action, all these will not work
 	virtual void addSubAction(int pos, SubActionType type, Expr expr)
@@ -47,4 +49,4 @@ Action makeActionMapAdd();
 
 class LoopBlockBase;
 
-Action makeActionLoop(shared_ptr<LoopBlockBase> loop, int offset, int iters);
+Action makeActionLoop(shared_ptr<LoopBlockBase> loop, int offset);

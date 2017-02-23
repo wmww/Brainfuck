@@ -52,6 +52,28 @@ Expr expr()
 
 
 
+class ExprFromData: public ExprBase
+{
+public:
+	string getC()
+	{
+		return "_p[" + to_string(pos + *offset) + "]";
+	}
+	
+	int pos;
+	int * offset; //this will point to the offset int in the ActionMapAdd this Expr is in
+};
+
+Expr exprFromData(int pos, int * offset)
+{
+	auto out = new ExprFromData;
+	out->pos = pos;
+	out->offset = offset;
+	return Expr(out);
+}
+
+
+
 class ExprVariable: public ExprBase
 {
 public:
@@ -83,7 +105,11 @@ public:
 
 Expr sum(Expr a, Expr b)
 {
-	if (a->isLiteral() && b->isLiteral())
+	if (a->isIdk() || b->isIdk())
+	{
+		return exprIdk();
+	}
+	else if (a->isLiteral() && b->isLiteral())
 	{
 		return expr(
 			((ExprLiteral*)&(*a))->val
@@ -114,7 +140,11 @@ public:
 
 Expr product(Expr a, Expr b)
 {
-	if (a->isLiteral() && b->isLiteral())
+	if (a->isIdk() || b->isIdk())
+	{
+		return exprIdk();
+	}
+	else if (a->isLiteral() && b->isLiteral())
 	{
 		return expr(
 			((ExprLiteral*)&(*a))->val
@@ -130,4 +160,24 @@ Expr product(Expr a, Expr b)
 		return Expr(out);
 	}
 }
+
+
+
+class ExprIdk: public ExprBase
+{
+public:
+	string getC()
+	{
+		return "\n#error ExprIdk made it into the transpiled C source\n";
+	}
+	
+	bool isIdk() {return true;}
+};
+
+Expr exprIdk()
+{
+	auto out = new ExprIdk;
+	return Expr(out);
+}
+
 

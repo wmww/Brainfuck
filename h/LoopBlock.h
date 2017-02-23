@@ -12,9 +12,10 @@ public:
 	void shiftPos(int dist);
 	void add(char c);
 	void addToCell(SubActionType type, int pos, Expr val);
+	Expr getNetChangeToPos(int i);
 	//void zeroPos();
 	bool canUnroll();
-	void unroll(int offset, int iters);
+	void unroll(int offset);
 	string getC();
 	
 	int pos;
