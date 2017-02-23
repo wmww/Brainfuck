@@ -242,7 +242,12 @@ public:
 		if (loop->pos != 0)
 			out += indentString("_p += " + to_string(loop->pos) + ";\n");
 		
-		out += "}\n\n";
+		out += "}\n";
+		
+		if (offset != 0)
+			out += "_p -= " + to_string(offset) + ";\n";
+			
+		out += "\n";
 		
 		return out;
 	}
@@ -253,7 +258,7 @@ public:
 	}
 	
 	LoopBlock loop=0;
-	int offset;
+	int offset; // the constant offset of everything
 };
 
 Action makeActionLoop(LoopBlock loop, int offset)
