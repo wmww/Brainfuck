@@ -98,7 +98,7 @@ void LoopBlockBase::mergeFrom(LoopBlock src)
 	*/
 	{
 		actions.push_back(makeActionLoop(src, pos));
-		pos = 0;
+		//pos = 0;
 	}
 }
 

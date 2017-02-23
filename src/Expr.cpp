@@ -154,7 +154,7 @@ Expr product(Expr a, Expr b)
 	}
 	else
 	{
-		auto out = new ExprSum;
+		auto out = new ExprProduct;
 		out->a = move(a);
 		out->b = move(b);
 		return Expr(out);

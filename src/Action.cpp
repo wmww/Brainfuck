@@ -79,14 +79,16 @@ public:
 	{
 		this->offset += offset;
 		
-		for (auto i: data)
+		for (auto i = data.begin(); i != data.end(); i++)
 		{
-			for (auto j: i.second)
+			for (auto j = i->second.begin(); j != i->second.end(); j++)
 			{
-				switch (j.type)
+				switch (j->type)
 				{
 				case ACTION_ADD:
-					j.val = product(j.val, exprFromData(offset, &offset));
+					//cout << "making product of " << j.val->getC() << " and " << exprFromData(offset, &offset)->getC() << endl;
+					j->val = product(j->val, exprFromData(offset, &offset));
+					//cout << j.val->getC() << endl;
 					break;
 					
 				case ACTION_SET:
