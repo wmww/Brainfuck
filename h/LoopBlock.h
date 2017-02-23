@@ -7,12 +7,14 @@ class LoopBlockBase
 {
 public:
 	LoopBlockBase();
+	shared_ptr<LoopBlockBase> makeCopy();
 	void mergeFrom(shared_ptr<LoopBlockBase> src);
-	void add(char c);
-	void add(Action a);
-	void addToCell(SubActionType type, Expr val);
-	void zeroPos();
 	void shiftPos(int dist);
+	void add(char c);
+	void addToCell(SubActionType type, int pos, Expr val);
+	//void zeroPos();
+	bool canUnroll();
+	void unroll(int offset, int iters);
 	string getC();
 	
 	int pos;

@@ -14,6 +14,17 @@ LoopBlockBase::LoopBlockBase()
 	//totalOffset = 0;
 }
 
+LoopBlock LoopBlockBase::makeCopy()
+{
+	auto out = new LoopBlockBase();
+	out->pos = pos;
+	for (auto i: actions)
+	{
+		out->actions.push_back(i->makeCopy());
+	}
+	return LoopBlock(out);
+}
+
 void LoopBlockBase::add(char c)
 {
 	switch (c)
@@ -32,22 +43,22 @@ void LoopBlockBase::add(char c)
 		
 	case '+':
 		//add(makeActionAdd(pos, expr(1)));
-		addToCell(ACTION_ADD, expr(1));
+		addToCell(ACTION_ADD, pos, expr(1));
 		break;
 		
 	case '-':
 		//add(makeActionAdd(pos, expr(-1)));
-		addToCell(ACTION_ADD, expr(-1));
+		addToCell(ACTION_ADD, pos, expr(-1));
 		break;
 		
 	case '.':
 		//add(makeActionOut(pos));
-		addToCell(ACTION_OUT, expr());
+		addToCell(ACTION_OUT, pos, expr());
 		break;
 		
 	case ',':
 		//cout << "',' input operator not yet implemented" << endl;
-		addToCell(ACTION_IN, expr());
+		addToCell(ACTION_IN, pos, expr());
 		break;
 	
 	default:
@@ -55,12 +66,7 @@ void LoopBlockBase::add(char c)
 	}
 }
 
-void LoopBlockBase::add(Action a)
-{
-	actions.push_back(a);
-}
-
-void LoopBlockBase::addToCell(SubActionType type, Expr val)
+void LoopBlockBase::addToCell(SubActionType type, int pos, Expr val)
 {
 	if (actions.empty() || !actions.back()->isMapAdd())
 	{
@@ -74,8 +80,26 @@ void LoopBlockBase::mergeFrom(LoopBlock src)
 {
 	//zeroPos();
 	//src->zeroPos();
-	actions.push_back(makeActionLoop(src, pos));
-	pos = 0;
+	
+	/*
+	if (
+		src->actions.size() == 1 &&
+		src->actions.back()->isMapAdd() &&
+		src->actions.back()->onlyHasAddSubs()
+		)
+	{
+		for (auto i: *src->actions[0]->getData())
+		{
+			Expr e = i.second[0].val;
+			addToCell(ACTION_ADD, pos+i.first, e);
+		}
+	}
+	else
+	*/
+	{
+		actions.push_back(makeActionLoop(src, pos, -1));
+		pos = 0;
+	}
 }
 
 /*
@@ -85,6 +109,32 @@ void LoopBlockBase::zeroPos()
 	pos = 0;
 }
 */
+
+bool LoopBlockBase::canUnroll()
+{
+	if (pos != 0)
+	{
+		return false;
+	}
+	
+	for (auto i: actions)
+	{
+		if (!i->canUnroll())
+		{
+			return false;
+		}
+	}
+	
+	return true;
+}
+
+void LoopBlockBase::unroll(int offset, int iters)
+{
+	for (auto i: actions)
+	{
+		i->unroll(offset, iters);
+	}
+}
 
 void LoopBlockBase::shiftPos(int dist)
 {

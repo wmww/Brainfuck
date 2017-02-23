@@ -1,10 +1,24 @@
 #include "../h/Action.h"
 #include "../h/LoopBlock.h"
-#include <map>
+
+
+struct SubAction
+{
+	SubActionType type;
+	Expr val;
+};
+
 
 class ActionMapAdd: public ActionBase
 {
 public:
+	
+	Action makeCopy()
+	{
+		auto out = new ActionMapAdd();
+		*out = *this;
+		return Action(out);
+	}
 	
 	string getC()
 	{
@@ -18,15 +32,15 @@ public:
 				{
 				case ACTION_ADD:
 					if (!j.val->isZero())
-						out += "_p[" + to_string(i.first) + "] += " + j.val->getC() + ";\n";
+						out += "_p[" + to_string(i.first+offset) + "] += " + j.val->getC() + ";\n";
 					break;
 				
 				case ACTION_OUT:
-					out += "putchar((char)_p[" + to_string(i.first) + "]);\n";
+					out += "putchar((char)_p[" + to_string(i.first+offset) + "]);\n";
 					break;
 					
 				case ACTION_IN:
-					out += "_p[" + to_string(i.first) + "] = getchar();\n";
+					out += "_p[" + to_string(i.first+offset) + "] = getchar();\n";
 					break;
 				
 				default:
@@ -43,6 +57,12 @@ public:
 	void addSubAction(int pos, SubActionType type, Expr val)
 	{
 		vector<SubAction>& elem = data[pos];
+		
+		if (type!=ACTION_ADD)
+		{
+			onlyHasAddSubsBool = false;
+		}
+		
 		if (type==ACTION_ADD && !elem.empty() && elem.back().type==ACTION_ADD)
 		{
 			elem.back().val = sum(elem.back().val, val);
@@ -53,13 +73,63 @@ public:
 		}
 	}
 	
-	struct SubAction
-	{
-		SubActionType type;
-		Expr val;
-	};
+	bool canUnroll() {return onlyHasAddSubsBool;}
 	
+	void unroll(int offset, int iters)
+	{
+		this->offset += offset;
+		
+		for (auto i: data)
+		{
+			for (auto j: i.second)
+			{
+				switch (j.type)
+				{
+				case ACTION_ADD:
+					j.val = product(j.val, expr(iters));
+					break;
+					
+				case ACTION_SET:
+					// do nothing
+					break;
+					
+				default:
+					cout << "tried to unroll an action with a sub action that can't be unrolled" << endl;
+					break;
+				}
+			}
+		}
+	}
+	
+	/*
+	string getCUnrolled()
+	{
+		string out="";
+		
+		Variable var = makeVariable();
+		
+		if (data.find(0) == data.end())
+		{
+			out += "// nevermind, endless loop\n";
+			out += "while (1)\n{\n";
+			out += indentString(getC());
+			out += "}\n";
+			return out;
+		}
+		
+		out += "int " + var->getName() + " = _p[0];\n";
+		
+		return out;
+	}
+	*/
+	
+	//bool onlyHasAddSubs() {return onlyHasAddSubsBool;}
+	
+	//std::map<int, vector<SubAction> >* getData() {return &data;}
+	
+	bool onlyHasAddSubsBool = true;
 	std::map<int, vector<SubAction> > data;
+	int offset = 0;
 };
 
 Action makeActionMapAdd()
@@ -68,10 +138,61 @@ Action makeActionMapAdd()
 	return Action(out);
 }
 
+class ActionUnrolled: public ActionBase
+{
+public:
+	
+	Action makeCopy()
+	{
+		auto out = new ActionUnrolled();
+		*out = *this;
+		out->loop = loop->makeCopy();
+		return Action(out);
+	}
+	
+	string getC()
+	{
+		string out = "";
+		
+		out += "\n";
+		
+		out += "// unrolled loop\n{\n";
+		//out += indentString("int " + var->getName() + " = _p[" + to_string(offset) + "];")
+		//vector<string> conditions;
+		
+		//out += indentString("if (" + var->getName() + );
+		out += indentString(loop->getC());
+		
+		out += "}\n\n";
+		
+		return out;
+	}
+	
+	bool canUnroll() {return loop->canUnroll();}
+	
+	void unroll(int offset, int iters)
+	{
+		//offset += offset;
+		loop->unroll(offset, iters);
+	}
+	
+	LoopBlock loop = nullptr;
+	//int offset;
+};
 
 class ActionLoop: public ActionBase
 {
 public:
+	
+	Action makeCopy()
+	{
+		auto out = new ActionLoop();
+		*out = *this;
+		if (out->loop)
+			out->loop = out->loop->makeCopy();
+		return Action(out);
+	}
+	
 	string getC()
 	{
 		string out = "";
@@ -97,12 +218,23 @@ public:
 	int offset;
 };
 
-Action makeActionLoop(LoopBlock loop, int offset)
+Action makeActionLoop(LoopBlock loop, int offset, int iters)
 {
-	auto out = new ActionLoop;
-	out->loop = loop;
-	out->offset = offset;
-	return Action(out);
+	if (loop->canUnroll() && iters>=0)
+	{
+		auto out = new ActionUnrolled;
+		auto var = makeVariable();
+		loop->unroll(offset, iters);
+		out->loop = loop;
+		return Action(out);
+	}
+	else
+	{
+		auto out = new ActionLoop;
+		out->loop = loop;
+		out->offset = offset;
+		return Action(out);
+	}
 }
 
 /*

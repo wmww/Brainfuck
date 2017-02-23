@@ -1,2 +1,1 @@
-
-"hello_world.bf"
+"save_bmp.bf"
