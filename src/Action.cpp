@@ -188,6 +188,10 @@ public:
 		out += indentString("printf(\"fatal error: overflow detected due to wrong loop direction\\n\");\nreturn -1;\n");
 		out += "}\n";
 		
+		out += "if (_p[" + to_string(offset) + "] % " + iterChangeToBasePos->getC() + ")\n{\n";
+		out += indentString("printf(\"fatal error: overflow detected due to overshoot of zero\\n\");\nreturn -1;\n");
+		out += "}\n";
+		
 		//) == (_p[" + to_string(offset) + "] >= 0)
 		
 		//out += indentString("int " + var->getName() + " = _p[" + to_string(offset) + "];")
