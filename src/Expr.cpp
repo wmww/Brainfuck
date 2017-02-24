@@ -25,10 +25,9 @@ public:
 	
 	bool isLiteral() {return true;}
 	
-	bool isZero()
-	{
-		return val==0;
-	}
+	bool isZero() {return val==0;}
+	
+	bool isOne() {return val==1;}
 	
 	bool equals(Expr other)
 	{
@@ -117,6 +116,14 @@ Expr sum(Expr a, Expr b)
 			((ExprLiteral*)&(*b))->val
 		);
 	}
+	else if (a->isZero())
+	{
+		return b;
+	}
+	else if (b->isZero())
+	{
+		return a;
+	}
 	else
 	{
 		auto out = new ExprSum;
@@ -152,6 +159,22 @@ Expr product(Expr a, Expr b)
 			((ExprLiteral*)&(*b))->val
 		);
 	}
+	else if (a->isLiteral() && ((ExprLiteral*)&(*a))->val == -1)
+	{
+		return negative(b);
+	}
+	else if (b->isLiteral() && ((ExprLiteral*)&(*b))->val == -1)
+	{
+		return negative(a);
+	}
+	else if (a->isOne())
+	{
+		return b;
+	}
+	else if (b->isOne())
+	{
+		return a;
+	}
 	else
 	{
 		auto out = new ExprProduct;
@@ -178,6 +201,18 @@ Expr quotient(Expr a, Expr b)
 	if (a->isIdk() || b->isIdk())
 	{
 		return exprIdk();
+	}
+	else if (b->isZero())
+	{
+		return exprIdk();
+	}
+	else if (b->isOne())
+	{
+		return a;
+	}
+	else if (b->isLiteral() && ((ExprLiteral*)&(*b))->val == -1)
+	{
+		return negative(a);
 	}
 	else if (a->isLiteral() && b->isLiteral())
 	{

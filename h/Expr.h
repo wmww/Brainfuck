@@ -23,6 +23,7 @@ public:
 	virtual bool isIdk() {return false;}
 	virtual bool isLiteral() {return false;}
 	virtual bool isZero() {return false;}
+	virtual bool isOne() {return false;}
 	virtual bool equals(shared_ptr<ExprBase> other) {return false;}
 };
 

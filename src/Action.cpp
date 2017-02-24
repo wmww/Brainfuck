@@ -184,13 +184,19 @@ public:
 		
 		out += "\n";
 		
-		out += "// unrolled loop\n{\n";
+		out += "// unrolled loop\n";
+		out += "if ((" + iterChangeToBasePos->getC() + " >= 0) == (_p[" + to_string(offset) + "] <= 0))\n{\n";
+		
+		//) == (_p[" + to_string(offset) + "] >= 0)
+		
 		//out += indentString("int " + var->getName() + " = _p[" + to_string(offset) + "];")
 		//vector<string> conditions;
 		
 		//out += indentString("if (" + var->getName() + );
 		out += indentString(loop->getC());
 		
+		out += "}\nelse\n{\n";
+		out += indentString("printf(\"fatal error: overflow detected in unrolled loop\\n\");\nreturn -1;\n");
 		out += "}\n\n";
 		
 		return out;
@@ -202,7 +208,7 @@ public:
 	void unroll(int offset, Expr iters)
 	{
 		cout << "ActionUnrolled unrolling not implemented" << endl;
-		//offset += offset;
+		offset += offset;
 		//loop->unroll(offset, iters);
 	}
 	
@@ -212,7 +218,8 @@ public:
 	}
 	
 	LoopBlock loop = nullptr;
-	//int offset;
+	int offset = 0;
+	Expr iterChangeToBasePos = nullptr;
 };
 
 class ActionLoop: public ActionBase
@@ -269,7 +276,9 @@ Action makeActionLoop(LoopBlock loop, int offset)
 	{
 		auto out = new ActionUnrolled;
 		//auto var = makeVariable();
+		out->iterChangeToBasePos = loop->getNetChangeToPos(offset);
 		loop->unroll(offset);
+		out->offset = offset;
 		out->loop = loop;
 		return Action(out);
 	}
