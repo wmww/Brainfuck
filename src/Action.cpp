@@ -184,8 +184,9 @@ public:
 		
 		out += "\n";
 		
-		out += "// unrolled loop\n";
-		out += "if ((" + iterChangeToBasePos->getC() + " >= 0) == (_p[" + to_string(offset) + "] <= 0))\n{\n";
+		out += "if ((" + iterChangeToBasePos->getC() + " >= 0) != (_p[" + to_string(offset) + "] <= 0))\n{\n";
+		out += indentString("printf(\"fatal error: overflow detected due to wrong loop direction\\n\");\nreturn -1;\n");
+		out += "}\n";
 		
 		//) == (_p[" + to_string(offset) + "] >= 0)
 		
@@ -193,10 +194,9 @@ public:
 		//vector<string> conditions;
 		
 		//out += indentString("if (" + var->getName() + );
-		out += indentString(loop->getC());
 		
-		out += "}\nelse\n{\n";
-		out += indentString("printf(\"fatal error: overflow detected in unrolled loop\\n\");\nreturn -1;\n");
+		out += "// unrolled loop\n{\n";
+		out += indentString(loop->getC());
 		out += "}\n\n";
 		
 		return out;

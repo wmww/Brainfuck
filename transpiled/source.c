@@ -7,15 +7,14 @@ int main(void)
 {
 	_p[0] += 1;
 	
+	if ((1 >= 0) != (_p[0] <= 0))
+	{
+		printf("fatal error: overflow detected due to wrong loop direction\n");
+		return -1;
+	}
 	// unrolled loop
-	if ((1 >= 0) == (_p[0] <= 0))
 	{
 		_p[0] += (-_p[0]);
-	}
-	else
-	{
-		printf("fatal error: overflow detected in unrolled loop\n");
-		return -1;
 	}
 	
 }
