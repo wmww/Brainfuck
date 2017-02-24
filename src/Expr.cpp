@@ -162,6 +162,72 @@ Expr product(Expr a, Expr b)
 }
 
 
+class ExprQuotient: public ExprBase
+{
+public:
+	string getC()
+	{
+		return "(" + a->getC() + " / " + b->getC() + ")";
+	}
+	
+	Expr a, b;
+};
+
+Expr quotient(Expr a, Expr b)
+{
+	if (a->isIdk() || b->isIdk())
+	{
+		return exprIdk();
+	}
+	else if (a->isLiteral() && b->isLiteral())
+	{
+		return expr(
+			((ExprLiteral*)&(*a))->val
+			/
+			((ExprLiteral*)&(*b))->val
+		);
+	}
+	else
+	{
+		auto out = new ExprQuotient;
+		out->a = move(a);
+		out->b = move(b);
+		return Expr(out);
+	}
+}
+
+
+class ExprNegative: public ExprBase
+{
+public:
+	string getC()
+	{
+		return "(-" + a->getC() + ")";
+	}
+	
+	Expr a;
+};
+
+Expr negative(Expr a)
+{
+	if (a->isIdk())
+	{
+		return exprIdk();
+	}
+	else if (a->isLiteral())
+	{
+		return expr(-((ExprLiteral*)&(*a))->val);
+	}
+	else
+	{
+		auto out = new ExprNegative;
+		out->a = move(a);
+		return Expr(out);
+	}
+}
+
+
+
 
 class ExprIdk: public ExprBase
 {

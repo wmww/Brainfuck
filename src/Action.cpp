@@ -79,6 +79,8 @@ public:
 	{
 		this->offset += offset;
 		
+		Expr iter = negative(getNetChangeToPos(0));
+		
 		for (auto i = data.begin(); i != data.end(); i++)
 		{
 			for (auto j = i->second.begin(); j != i->second.end(); j++)
@@ -87,7 +89,7 @@ public:
 				{
 				case ACTION_ADD:
 					//cout << "making product of " << j.val->getC() << " and " << exprFromData(offset, &offset)->getC() << endl;
-					j->val = product(j->val, exprFromData(offset, &offset));
+					j->val = quotient(product(j->val, exprFromData(0, &this->offset)), iter);
 					//cout << j.val->getC() << endl;
 					break;
 					

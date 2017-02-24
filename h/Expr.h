@@ -35,4 +35,6 @@ Expr exprFromData(int pos, int * offset);
 Expr expr(Variable val);
 Expr sum(Expr a, Expr b);
 Expr product(Expr a, Expr b);
+Expr quotient(Expr a, Expr b);
+Expr negative(Expr a);
 
