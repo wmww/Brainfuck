@@ -1,7 +1,8 @@
 #pragma once
 
 #include "utils.h"
-#include "LoopBlock.h"
+#include "Block.h"
+#include "Loop.h"
 
 const int DATA_SIZE=600000;
 
@@ -13,5 +14,6 @@ public:
 	string getC();
 	
 private:
-	vector<LoopBlock> stack{makeLoopBlock()};
+	Block rootBlock;
+	Block* currentBlock;
 };

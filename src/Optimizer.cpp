@@ -2,7 +2,7 @@
 
 Optimizer::Optimizer()
 {
-	
+	currentBlock = &rootBlock;
 }
 
 void Optimizer::add(char c)
@@ -12,14 +12,14 @@ void Optimizer::add(char c)
 	switch (c)
 	{
 	case '[':
-		stack.push_back(makeLoopBlock());
+		currentBlock->nextLoop = makeLoop();
+		currentBlock = currentBlock->nextLoop->contentsBlock;
 		break;
 		
 	case ']':
-		if (stack.size()>=2)
+		if (currentBlock->parentLoop)
 		{
-			stack[stack.size()-2]->mergeFrom(stack[stack.size()-1]);
-			stack.pop_back();
+			currentBlock = currentBlock->parentLoop->nextBlock
 		}
 		else
 		{
@@ -28,19 +28,15 @@ void Optimizer::add(char c)
 		break;
 		
 	default:
-		stack.back()->add(c);
+		currentBlock->add(c);
 	}
 }
 
 string Optimizer::getC()
 {
-	if (stack.size()>1)
+	if (currentBlock->parentLoop)
 	{
 		cout << "no matching ']'" << endl;
-	}
-	else if (stack.size()!=1)
-	{
-		cout << "stack of bad length" << endl;
 	}
 	else
 	{
@@ -48,11 +44,11 @@ string Optimizer::getC()
 		
 		out+=
 			"#include <stdio.h>\n\n"
-			"int _data["+to_string(1000000000)+"];\n"
-			"int* _p = _data+500000000;\n\n"
+			"int data["+to_string(DATA_SIZE)+"];\n"
+			"int* p = data;\n\n"
 			"int main(void)\n{\n";
 		
-		out += indentString(stack[0]->getC());
+		out += indentString(rootBlock.getC());
 		
 		out += "}\n";
 		
