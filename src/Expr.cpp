@@ -56,18 +56,16 @@ class ExprFromData: public ExprBase
 public:
 	string getC()
 	{
-		return "_p[" + to_string(pos + *offset) + "]";
+		return "p[" + to_string(pos) + "]";
 	}
 	
 	int pos;
-	int * offset; //this will point to the offset int in the ActionMapAdd this Expr is in
 };
 
-Expr exprFromData(int pos, int * offset)
+Expr exprFromData(int pos)
 {
 	auto out = new ExprFromData;
 	out->pos = pos;
-	out->offset = offset;
 	return Expr(out);
 }
 

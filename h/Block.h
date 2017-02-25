@@ -3,6 +3,7 @@
 #include "utils.h"
 #include "Expr.h"
 
+/*
 #include <map>
 
 enum SubActionType
@@ -12,41 +13,47 @@ enum SubActionType
 	ACTION_OUT,
 	ACTION_IN,
 };
+*/
 
-class ActionBase
+class LoopBase;
+
+class Block
 {
 public:
 	
-	virtual shared_ptr<ActionBase> makeCopy()=0;
+	void appendAction(char c);
 	
-	virtual string getC()=0;
+	string getC();
+	
+	void addAction(Action action);
+	
+	&CellChange getCell(int index);
+	
+	void addToCell(int index, Expr val);
+	
+	struct CellChange
+	{
+		bool absoluteSet; // if false then val is added to what is already in the cell
+		Expr val;
+		
+		Expr getExpr(int pos);
+	};
+	
+	int pos = 0;
+	std::map<int, CellChange> cells;
+	vector<Action> actions;
+	bool isRoot = false;
+	shared_ptr<LoopBase> parentLoop = nullptr;
+	shared_ptr<LoopBase> nextLoop = nullptr;
+	
+	//virtual shared_ptr<ActionBase> makeCopy()=0;
 	//virtual string getCUnrolled() {return "// error: can not unroll this type of action\n";};
-	
-	virtual bool isMapAdd() {return false;}
-	
-	virtual bool canUnroll() {return false;}
-	
-	virtual void unroll(int offset) {cout << "called unroll on an action that can't be unrolled" << endl;};
-	
-	virtual Expr getNetChangeToPos(int i) {return exprIdk();};
+	//virtual bool isMapAdd() {return false;}
+	//virtual bool canUnroll() {return false;}
+	//virtual void unroll(int offset) {cout << "called unroll on an action that can't be unrolled" << endl;};
+	//virtual Expr getNetChangeToPos(int i) {return exprIdk();};
 	
 	// if this is not a map add action, all these will not work
-	virtual void addSubAction(int pos, SubActionType type, Expr expr)
-	{
-		cout << "addSubAction() called on action other then add map" << endl;
-	}
 	//virtual bool onlyHasAddSubs() {return false;}
 	//virtual std::map<int, vector<SubAction> >* getData() {return nullptr;}
 };
-
-typedef shared_ptr<ActionBase> Action;
-
-//Action makeActionAdd(int pos, Expr val);
-//Action makeActionShift(int val);
-//Action makeActionOut(int pos);
-
-Action makeActionMapAdd();
-
-class LoopBlockBase;
-
-Action makeActionLoop(shared_ptr<LoopBlockBase> loop, int offset);

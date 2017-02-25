@@ -2,6 +2,7 @@
 
 Optimizer::Optimizer()
 {
+	rootBlock.isRoot = true;
 	currentBlock = &rootBlock;
 }
 
@@ -28,7 +29,7 @@ void Optimizer::add(char c)
 		break;
 		
 	default:
-		currentBlock->add(c);
+		currentBlock->appendAction(c);
 	}
 }
 

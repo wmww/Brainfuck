@@ -1,13 +1,83 @@
-#include "../h/Action.h"
-#include "../h/LoopBlock.h"
+#include "../h/Block.h"
+#include "../h/Loop.h"
 
+void Block::appendAction(char c)
+{
+	switch (c)
+	{
+	case '>':
+		pos++;
+		break;
+		
+	case '<':
+		pos--;
+		break;
+		
+	case '+':
+		addToCell(pos, expr(1));
+		break;
+		
+	case '-':
+		addToCell(pos, expr(-1));
+		break;
+		
+	case '.':
+		addAction(outAction(pos, getCell(pos)->getExpr(pos)));
+		break;
+		
+	case ',':
+		addAction(inAction(pos));
+		auto cell = getCell(pos);
+		cell.absoluteSet = false;
+		cell.val = expr(0);
+		break;
+	
+	default:
+		break;
+	}
+}
+	
+string Block::getC()
+{
+	return "// Block::getC not yet implemented\n"
+}
 
+&CellChange Block::getCell(int index)
+{
+	if (cellChanges.find(index) == cellChanges.end())
+	{
+		if (isRoot)
+			cellChanges[index] = {true, expr(0)};
+		else
+			cellChanges[index] = {false, expr(0)};
+	}
+	
+	return cellChanges[index];
+}
+
+void Block::addToCell(int index, Expr val)
+{
+	auto cell = getCell(index);
+	cell.val = sum(cell.val, val);
+}
+
+Expr Block::CellChange::getExpr(int pos)
+{
+	return absoluteSet ?
+		val
+	:
+		sum(val, exprFromData(pos));
+}
+
+/*
 struct SubAction
 {
 	SubActionType type;
 	Expr val;
 };
+*/
 
+/*
 
 class ActionMapAdd: public ActionBase
 {
@@ -149,7 +219,6 @@ public:
 		
 		return out;
 	}
-	*/
 	
 	//bool onlyHasAddSubs() {return onlyHasAddSubsBool;}
 	
@@ -294,6 +363,8 @@ Action makeActionLoop(LoopBlock loop, int offset)
 		return Action(out);
 	}
 }
+
+*/
 
 /*
 class ActionAdd: public ActionBase

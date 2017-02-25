@@ -32,7 +32,7 @@ typedef shared_ptr<ExprBase> Expr;
 Expr expr();
 Expr exprIdk();
 Expr expr(int val);
-Expr exprFromData(int pos, int * offset);
+Expr exprFromData(int pos);
 Expr expr(Variable val);
 Expr sum(Expr a, Expr b);
 Expr product(Expr a, Expr b);
