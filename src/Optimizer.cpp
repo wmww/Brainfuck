@@ -48,8 +48,8 @@ string Optimizer::getC()
 		
 		out+=
 			"#include <stdio.h>\n\n"
-			"int _data["+to_string(DATA_SIZE)+"];\n"
-			"int* _p = _data;\n\n"
+			"int _data["+to_string(1000000000)+"];\n"
+			"int* _p = _data+500000000;\n\n"
 			"int main(void)\n{\n";
 		
 		out += indentString(stack[0]->getC());
