@@ -40,6 +40,9 @@
 		<Unit filename="../bf/reverse_string.bf" />
 		<Unit filename="../bf/save_bmp.bf" />
 		<Unit filename="../bf/src.bf" />
+		<Unit filename="../h/Action.h">
+			<Option target="transpile" />
+		</Unit>
 		<Unit filename="../h/Block.h">
 			<Option target="transpile" />
 		</Unit>
@@ -49,6 +52,9 @@
 		</Unit>
 		<Unit filename="../h/Optimizer.h" />
 		<Unit filename="../h/utils.h" />
+		<Unit filename="../src/Action.cpp">
+			<Option target="transpile" />
+		</Unit>
 		<Unit filename="../src/Block.cpp">
 			<Option target="transpile" />
 		</Unit>

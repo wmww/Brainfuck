@@ -14,13 +14,13 @@ void Optimizer::add(char c)
 	{
 	case '[':
 		currentBlock->nextLoop = makeLoop();
-		currentBlock = currentBlock->nextLoop->contentsBlock;
+		currentBlock = &currentBlock->nextLoop->contentsBlock;
 		break;
 		
 	case ']':
 		if (currentBlock->parentLoop)
 		{
-			currentBlock = currentBlock->parentLoop->nextBlock
+			currentBlock = &currentBlock->parentLoop->nextBlock;
 		}
 		else
 		{

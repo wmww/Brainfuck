@@ -2,6 +2,8 @@
 
 #include "utils.h"
 #include "Expr.h"
+#include "Action.h"
+#include <map>
 
 /*
 #include <map>
@@ -21,16 +23,6 @@ class Block
 {
 public:
 	
-	void appendAction(char c);
-	
-	string getC();
-	
-	void addAction(Action action);
-	
-	&CellChange getCell(int index);
-	
-	void addToCell(int index, Expr val);
-	
 	struct CellChange
 	{
 		bool absoluteSet; // if false then val is added to what is already in the cell
@@ -38,6 +30,16 @@ public:
 		
 		Expr getExpr(int pos);
 	};
+	
+	void appendAction(char c);
+	
+	string getC();
+	
+	void addAction(Action action);
+	
+	CellChange& getCell(int index);
+	
+	void addToCell(int index, Expr val);
 	
 	int pos = 0;
 	std::map<int, CellChange> cells;

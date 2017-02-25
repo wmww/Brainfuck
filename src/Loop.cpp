@@ -1,5 +1,18 @@
-#include "../h/LoopBlock.h"
+#include "../h/Loop.h"
 
+LoopBase::LoopBase()
+{
+	
+}
+
+Loop makeLoop()
+{
+	auto loop = Loop(new LoopBase);
+	loop->contentsBlock.parentLoop = loop->shared_from_this();
+	return loop;
+}
+
+/*
 LoopBlock makeLoopBlock()
 {
 	return LoopBlock(new LoopBlockBase());
@@ -80,35 +93,11 @@ void LoopBlockBase::mergeFrom(LoopBlock src)
 {
 	//zeroPos();
 	//src->zeroPos();
-	
-	/*
-	if (
-		src->actions.size() == 1 &&
-		src->actions.back()->isMapAdd() &&
-		src->actions.back()->onlyHasAddSubs()
-		)
-	{
-		for (auto i: *src->actions[0]->getData())
-		{
-			Expr e = i.second[0].val;
-			addToCell(ACTION_ADD, pos+i.first, e);
-		}
-	}
-	else
-	*/
 	{
 		actions.push_back(makeActionLoop(src, pos));
 		//pos = 0;
 	}
 }
-
-/*
-void LoopBlockBase::zeroPos()
-{
-	actions.push_back(makeActionShift(pos));
-	pos = 0;
-}
-*/
 
 bool LoopBlockBase::canUnroll()
 {
@@ -171,3 +160,4 @@ string LoopBlockBase::getC()
 	return out;
 }
 
+*/

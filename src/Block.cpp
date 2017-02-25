@@ -22,14 +22,16 @@ void Block::appendAction(char c)
 		break;
 		
 	case '.':
-		addAction(outAction(pos, getCell(pos)->getExpr(pos)));
+		addAction(outAction(getCell(pos).getExpr(pos)));
 		break;
 		
 	case ',':
-		addAction(inAction(pos));
-		auto cell = getCell(pos);
-		cell.absoluteSet = false;
-		cell.val = expr(0);
+		{
+			addAction(inAction(pos));
+			auto cell = getCell(pos);
+			cell.absoluteSet = false;
+			cell.val = expr(0);
+		}
 		break;
 	
 	default:
@@ -39,20 +41,25 @@ void Block::appendAction(char c)
 	
 string Block::getC()
 {
-	return "// Block::getC not yet implemented\n"
+	return "// Block::getC not yet implemented\n";
 }
 
-&CellChange Block::getCell(int index)
+void Block::addAction(Action action)
 {
-	if (cellChanges.find(index) == cellChanges.end())
+	actions.push_back(action);
+}
+
+Block::CellChange& Block::getCell(int index)
+{
+	if (cells.find(index) == cells.end())
 	{
 		if (isRoot)
-			cellChanges[index] = {true, expr(0)};
+			cells[index] = {true, expr(0)};
 		else
-			cellChanges[index] = {false, expr(0)};
+			cells[index] = {false, expr(0)};
 	}
 	
-	return cellChanges[index];
+	return cells[index];
 }
 
 void Block::addToCell(int index, Expr val)
@@ -199,7 +206,6 @@ public:
 		return val;
 	}
 	
-	/*
 	string getCUnrolled()
 	{
 		string out="";

@@ -14,6 +14,7 @@ using std::endl;
 #include <memory>
 using std::unique_ptr;
 using std::shared_ptr;
+using std::enable_shared_from_this;
 
 string indentString(const string& in, string indent="\t");
 

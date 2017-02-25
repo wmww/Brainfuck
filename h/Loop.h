@@ -1,8 +1,22 @@
 #pragma once
 
 #include "utils.h"
-#include "Action.h"
+#include "Block.h"
 
+class LoopBase: public enable_shared_from_this<LoopBase>
+{
+public:
+	LoopBase();
+	
+	Block contentsBlock;
+	Block nextBlock;
+};
+
+typedef shared_ptr<LoopBase> Loop;
+
+Loop makeLoop();
+
+/*
 class LoopBlockBase
 {
 public:
@@ -26,3 +40,5 @@ public:
 typedef shared_ptr<LoopBlockBase> LoopBlock;
 
 LoopBlock makeLoopBlock();
+*/
+
