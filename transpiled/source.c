@@ -5,5 +5,8 @@ int* p = data;
 
 int main(void)
 {
-	// Block::getC not yet implemented
+	putchar(0);
+	putchar(0);
+	p[0] = 0;
+	p[1] = 0;
 }

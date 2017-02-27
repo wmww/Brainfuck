@@ -41,7 +41,19 @@ void Block::appendAction(char c)
 	
 string Block::getC()
 {
-	return "// Block::getC not yet implemented\n";
+	string out;
+	
+	for (auto i: actions)
+	{
+		out += i->getC();
+	}
+	
+	for (auto i: cells)
+	{
+		out += "p[" + to_string(i.first) + "] = " + i.second.getExpr(i.first)->getC() + ";\n";
+	}
+	
+	return out;
 }
 
 void Block::addAction(Action action)
