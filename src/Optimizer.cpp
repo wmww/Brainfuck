@@ -14,6 +14,7 @@ void Optimizer::add(char c)
 	{
 	case '[':
 		currentBlock->nextLoop = makeLoop();
+		currentBlock->nextLoop->nextBlock.parentLoop = currentBlock->parentLoop;
 		currentBlock = &currentBlock->nextLoop->contentsBlock;
 		break;
 		
