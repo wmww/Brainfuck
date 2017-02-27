@@ -76,7 +76,7 @@ Block::CellChange& Block::getCell(int index)
 
 void Block::addToCell(int index, Expr val)
 {
-	auto cell = getCell(index);
+	CellChange& cell = getCell(index);
 	cell.val = sum(cell.val, val);
 }
 

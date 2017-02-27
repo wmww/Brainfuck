@@ -5,8 +5,8 @@ int* p = data;
 
 int main(void)
 {
-	putchar(0);
-	putchar(0);
-	p[0] = 0;
-	p[1] = 0;
+	putchar(3);
+	putchar(4);
+	p[0] = 4;
+	p[1] = 3;
 }
