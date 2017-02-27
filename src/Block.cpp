@@ -53,6 +53,16 @@ string Block::getC()
 		out += "p[" + to_string(i.first) + "] = " + i.second.getExpr(i.first)->getC() + ";\n";
 	}
 	
+	if (pos)
+	{
+		out += "\np += " + to_string(pos) + ";\n";
+	}
+	
+	if (nextLoop)
+	{
+		out += nextLoop->getC();
+	}
+	
 	return out;
 }
 

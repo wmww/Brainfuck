@@ -12,6 +12,21 @@ Loop makeLoop()
 	return loop;
 }
 
+string LoopBase::getC()
+{
+	string out;
+	
+	out += "\nwhile(*p)\n{\n";
+	
+	out += indentString(contentsBlock.getC());
+	
+	out += "}\n\n";
+	
+	out += nextBlock.getC();
+	
+	return out;
+}
+
 /*
 LoopBlock makeLoopBlock()
 {
