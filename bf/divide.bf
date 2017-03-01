@@ -1,3 +1,9 @@
+input
+n	d	0	0	0	0	0
+
+output
+ans	0	0	0	0	0	0
+
 this is an abstraction of division that should be able to be used in other code
 when it is called the first 2 cells should hold the numorator and denominator and the next 5 cells should be 0
 when it exits the first cell will be the answer and the next 6 will be 0
