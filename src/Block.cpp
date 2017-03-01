@@ -1,7 +1,7 @@
 #include "../h/Block.h"
 #include "../h/Loop.h"
 
-void Block::appendAction(char c)
+void BlockBase::appendAction(char c)
 {
 	switch (c)
 	{
@@ -39,7 +39,7 @@ void Block::appendAction(char c)
 	}
 }
 	
-string Block::getC()
+string BlockBase::getC()
 {
 	string out;
 	
@@ -66,12 +66,12 @@ string Block::getC()
 	return out;
 }
 
-void Block::addAction(Action action)
+void BlockBase::addAction(Action action)
 {
 	actions.push_back(action);
 }
 
-Block::CellChange& Block::getCell(int index)
+BlockBase::CellChange& BlockBase::getCell(int index)
 {
 	if (cells.find(index) == cells.end())
 	{
@@ -84,13 +84,13 @@ Block::CellChange& Block::getCell(int index)
 	return cells[index];
 }
 
-void Block::addToCell(int index, Expr val)
+void BlockBase::addToCell(int index, Expr val)
 {
 	CellChange& cell = getCell(index);
 	cell.val = sum(cell.val, val);
 }
 
-Expr Block::CellChange::getExpr(int pos)
+Expr BlockBase::CellChange::getExpr(int pos)
 {
 	return absoluteSet ?
 		val

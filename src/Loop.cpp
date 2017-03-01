@@ -8,7 +8,9 @@ LoopBase::LoopBase()
 Loop makeLoop()
 {
 	auto loop = Loop(new LoopBase);
-	loop->contentsBlock.parentLoop = loop->shared_from_this();
+	loop->contentsBlock = Block(new BlockBase);
+	loop->nextBlock = Block(new BlockBase);
+	loop->contentsBlock->parentLoop = loop->shared_from_this();
 	return loop;
 }
 
@@ -18,11 +20,11 @@ string LoopBase::getC()
 	
 	out += "\nwhile(*p)\n{\n";
 	
-	out += indentString(contentsBlock.getC());
+	out += indentString(contentsBlock->getC());
 	
 	out += "}\n\n";
 	
-	out += nextBlock.getC();
+	out += nextBlock->getC();
 	
 	return out;
 }

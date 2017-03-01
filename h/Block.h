@@ -19,7 +19,7 @@ enum SubActionType
 
 class LoopBase;
 
-class Block
+class BlockBase
 {
 public:
 	
@@ -59,3 +59,5 @@ public:
 	//virtual bool onlyHasAddSubs() {return false;}
 	//virtual std::map<int, vector<SubAction> >* getData() {return nullptr;}
 };
+
+typedef shared_ptr<BlockBase> Block;

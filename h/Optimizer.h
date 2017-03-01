@@ -15,5 +15,5 @@ public:
 	
 private:
 	Block rootBlock;
-	Block* currentBlock;
+	Block currentBlock;
 };

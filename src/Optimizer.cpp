@@ -2,8 +2,9 @@
 
 Optimizer::Optimizer()
 {
-	rootBlock.isRoot = true;
-	currentBlock = &rootBlock;
+	rootBlock = Block(new BlockBase);
+	rootBlock->isRoot = true;
+	currentBlock = rootBlock;
 }
 
 void Optimizer::add(char c)
@@ -14,14 +15,14 @@ void Optimizer::add(char c)
 	{
 	case '[':
 		currentBlock->nextLoop = makeLoop();
-		currentBlock->nextLoop->nextBlock.parentLoop = currentBlock->parentLoop;
-		currentBlock = &currentBlock->nextLoop->contentsBlock;
+		currentBlock->nextLoop->nextBlock->parentLoop = currentBlock->parentLoop;
+		currentBlock = currentBlock->nextLoop->contentsBlock;
 		break;
 		
 	case ']':
 		if (currentBlock->parentLoop)
 		{
-			currentBlock = &currentBlock->parentLoop->nextBlock;
+			currentBlock = currentBlock->parentLoop->nextBlock;
 		}
 		else
 		{
@@ -50,7 +51,7 @@ string Optimizer::getC()
 			"int* p = data;\n\n"
 			"int main(void)\n{\n";
 		
-		out += indentString(rootBlock.getC());
+		out += indentString(rootBlock->getC());
 		
 		out += "}\n";
 		
