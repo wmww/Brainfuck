@@ -5,11 +5,12 @@ LoopBase::LoopBase()
 	
 }
 
-Loop makeLoop()
+Loop makeLoop(Block prevBlock)
 {
-	auto loop = Loop(new LoopBase);
+	auto loop = Loop(new LoopBase());
 	loop->contentsBlock = Block(new BlockBase);
 	loop->nextBlock = Block(new BlockBase);
+	loop->prevBlock = prevBlock;
 	loop->contentsBlock->parentLoop = loop->shared_from_this();
 	return loop;
 }
@@ -18,11 +19,14 @@ string LoopBase::getC()
 {
 	string out;
 	
-	out += "\nwhile(*p)\n{\n";
-	
-	out += indentString(contentsBlock->getC());
-	
-	out += "}\n\n";
+	if (contentsBlock)
+	{
+		out += "\nwhile(*p)\n{\n";
+		
+		out += indentString(contentsBlock->getC());
+		
+		out += "}\n\n";
+	}
 	
 	out += nextBlock->getC();
 	

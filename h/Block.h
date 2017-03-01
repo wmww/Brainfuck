@@ -19,7 +19,7 @@ enum SubActionType
 
 class LoopBase;
 
-class BlockBase
+class BlockBase: public enable_shared_from_this<BlockBase>
 {
 public:
 	
@@ -40,6 +40,9 @@ public:
 	CellChange& getCell(int index);
 	
 	void addToCell(int index, Expr val);
+	
+	shared_ptr<BlockBase> getUnrolled();
+	void mergeFrom(shared_ptr<BlockBase> target);
 	
 	int pos = 0;
 	std::map<int, CellChange> cells;

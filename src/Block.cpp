@@ -90,6 +90,63 @@ void BlockBase::addToCell(int index, Expr val)
 	cell.val = sum(cell.val, val);
 }
 
+Block BlockBase::getUnrolled()
+{
+	if (pos != 0)
+	{
+		return nullptr;
+	}
+	
+	//Expr basePosStartVal = target->getCell(target->pos).getExpr(target->pos);
+	Expr basePosStartVal = exprFromData(0);
+	
+	auto baseChange = getCell(0);
+	
+	if (baseChange.absoluteSet || baseChange.val->isZero())
+	{
+		return nullptr; // either endless loop or sets to zero, either way unrolling won't help
+	}
+	
+	Expr changeToBasePerIter = baseChange.val;
+	
+	Expr iters = quotient(basePosStartVal, changeToBasePerIter);
+	
+	Block out = Block(new BlockBase());
+	
+	for (auto i: cells)
+	{
+		if (i.first != 0)
+		{
+			out->addToCell(i.first, product(i.second.val, iters));
+		}
+	}
+	
+	out->cells[0] = {true, expr(0)};
+	
+	return out;
+}
+
+void BlockBase::mergeFrom(Block target)
+{
+	if (!target->actions.empty())
+	{
+		cout << "BlockBase::mergeFrom called with target that has actions" << endl;
+		return;
+	}
+	
+	cout << "BlockBase::mergeFrom is fucking broken. either fix it or don't call it." << endl;
+	
+	/*
+	for (auto i: target->cells)
+	{
+		if (i.second.absoluteSet)
+		{
+			cells[]
+		}
+	}
+	*/
+}
+
 Expr BlockBase::CellChange::getExpr(int pos)
 {
 	return absoluteSet ?

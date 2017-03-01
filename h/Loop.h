@@ -11,11 +11,12 @@ public:
 	
 	Block contentsBlock;
 	Block nextBlock;
+	Block prevBlock;
 };
 
 typedef shared_ptr<LoopBase> Loop;
 
-Loop makeLoop();
+Loop makeLoop(Block prevBlock);
 
 /*
 class LoopBlockBase

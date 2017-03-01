@@ -2,7 +2,7 @@
 
 Optimizer::Optimizer()
 {
-	rootBlock = Block(new BlockBase);
+	rootBlock = Block(new BlockBase());
 	rootBlock->isRoot = true;
 	currentBlock = rootBlock;
 }
@@ -14,7 +14,7 @@ void Optimizer::add(char c)
 	switch (c)
 	{
 	case '[':
-		currentBlock->nextLoop = makeLoop();
+		currentBlock->nextLoop = makeLoop(currentBlock);
 		currentBlock->nextLoop->nextBlock->parentLoop = currentBlock->parentLoop;
 		currentBlock = currentBlock->nextLoop->contentsBlock;
 		break;
@@ -22,7 +22,22 @@ void Optimizer::add(char c)
 	case ']':
 		if (currentBlock->parentLoop)
 		{
-			currentBlock = currentBlock->parentLoop->nextBlock;
+			auto unrolledBlock = currentBlock->getUnrolled();
+			
+			if (currentBlock->parentLoop->contentsBlock == currentBlock && unrolledBlock)
+			{
+				//currentBlock = currentBlock->parentLoop->prevBlock;
+				//currentBlock->nextLoop = nullptr;
+				//currentBlock->mergeFrom(unrolledBlock);
+				unrolledBlock->parentLoop = currentBlock->parentLoop->nextBlock->parentLoop;
+				currentBlock->parentLoop->nextBlock = unrolledBlock;
+				currentBlock->parentLoop->contentsBlock = nullptr;
+				currentBlock = unrolledBlock;
+			}
+			else
+			{
+				currentBlock = currentBlock->parentLoop->nextBlock;
+			}
 		}
 		else
 		{
