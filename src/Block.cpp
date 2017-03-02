@@ -257,19 +257,25 @@ void BlockBase::mergeFrom(Block target)
 			addToCell(i.first + pos, val);
 		}
 	}
+	
+	pos+=target->pos;
 }
 
 void BlockBase::replaceCellRefsWithCellVals(Expr& val)
 {
+	cout << "in: " << val->getC() << endl;
+	
 	if (val->isFromCell())
 	{
 		val = getCell(val->getVal()+pos).getExpr(val->getVal()+pos);
 	}
 	
-	for (Expr i: val->subs)
+	for (int i=0; i<int(val->subs.size()); i++)
 	{
-		replaceCellRefsWithCellVals(i);
+		replaceCellRefsWithCellVals(val->subs[i]);
 	}
+	
+	cout << "out: " << val->getC() << endl;
 }
 
 Expr BlockBase::CellChange::getExpr(int pos)

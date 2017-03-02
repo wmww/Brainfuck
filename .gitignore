@@ -13,3 +13,8 @@
 
 # executables
 Brainfuck
+
+# images
+*.bmp
+*.png
+*.jpg
