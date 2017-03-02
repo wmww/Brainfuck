@@ -10,7 +10,7 @@ int data[DATA_SIZE]; // is auto initalized to 0 by compiler
 int offset=0;
 int min=offset, max=offset;
 
-const bool debug=false;
+const bool debug=true;
 
 int runCode(string& code, int start); //send it some source and the index after the '[', it will return the index after ']'
 void runFile(string filename);
