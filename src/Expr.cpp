@@ -29,6 +29,8 @@ public:
 	
 	bool isOne() {return val==1;}
 	
+	int getLiteralVal() {return val;}
+	
 	bool equals(Expr other)
 	{
 		return (other->isLiteral() && (((ExprLiteral*)&(*other))->val == val));
@@ -94,10 +96,8 @@ class ExprSum: public ExprBase
 public:
 	string getC()
 	{
-		return "(" + a->getC() + " + " + b->getC() + ")";
+		return "(" + subs[0]->getC() + " + " + subs[1]->getC() + ")";
 	}
-	
-	Expr a, b;
 };
 
 Expr sum(Expr a, Expr b)
@@ -125,8 +125,8 @@ Expr sum(Expr a, Expr b)
 	else
 	{
 		auto out = new ExprSum;
-		out->a = move(a);
-		out->b = move(b);
+		out->subs.push_back(move(a));
+		out->subs.push_back(move(b));
 		return Expr(out);
 	}
 }
@@ -137,10 +137,8 @@ class ExprProduct: public ExprBase
 public:
 	string getC()
 	{
-		return "(" + a->getC() + " * " + b->getC() + ")";
+		return "(" + subs[0]->getC() + " * " + subs[1]->getC() + ")";
 	}
-	
-	Expr a, b;
 };
 
 Expr product(Expr a, Expr b)
@@ -152,16 +150,16 @@ Expr product(Expr a, Expr b)
 	else if (a->isLiteral() && b->isLiteral())
 	{
 		return expr(
-			((ExprLiteral*)&(*a))->val
+			a->getLiteralVal()
 			*
-			((ExprLiteral*)&(*b))->val
+			b->getLiteralVal()
 		);
 	}
-	else if (a->isLiteral() && ((ExprLiteral*)&(*a))->val == -1)
+	else if (a->isLiteral() && a->getLiteralVal() == -1)
 	{
 		return negative(b);
 	}
-	else if (b->isLiteral() && ((ExprLiteral*)&(*b))->val == -1)
+	else if (b->isLiteral() && b->getLiteralVal() == -1)
 	{
 		return negative(a);
 	}
@@ -176,8 +174,8 @@ Expr product(Expr a, Expr b)
 	else
 	{
 		auto out = new ExprProduct;
-		out->a = move(a);
-		out->b = move(b);
+		out->subs.push_back(move(a));
+		out->subs.push_back(move(b));
 		return Expr(out);
 	}
 }
@@ -188,10 +186,8 @@ class ExprQuotient: public ExprBase
 public:
 	string getC()
 	{
-		return "(" + a->getC() + " / " + b->getC() + ")";
+		return "(" + subs[0]->getC() + " / " + subs[1]->getC() + ")";
 	}
-	
-	Expr a, b;
 };
 
 Expr quotient(Expr a, Expr b)
@@ -215,16 +211,16 @@ Expr quotient(Expr a, Expr b)
 	else if (a->isLiteral() && b->isLiteral())
 	{
 		return expr(
-			((ExprLiteral*)&(*a))->val
+			a->getLiteralVal()
 			/
-			((ExprLiteral*)&(*b))->val
+			b->getLiteralVal()
 		);
 	}
 	else
 	{
 		auto out = new ExprQuotient;
-		out->a = move(a);
-		out->b = move(b);
+		out->subs.push_back(move(a));
+		out->subs.push_back(move(b));
 		return Expr(out);
 	}
 }
@@ -235,10 +231,8 @@ class ExprNegative: public ExprBase
 public:
 	string getC()
 	{
-		return "(-" + a->getC() + ")";
+		return "(-" + subs[0]->getC() + ")";
 	}
-	
-	Expr a;
 };
 
 Expr negative(Expr a)
@@ -249,12 +243,12 @@ Expr negative(Expr a)
 	}
 	else if (a->isLiteral())
 	{
-		return expr(-((ExprLiteral*)&(*a))->val);
+		return expr(-a->getLiteralVal());
 	}
 	else
 	{
 		auto out = new ExprNegative;
-		out->a = move(a);
+		out->subs.push_back(move(a));
 		return Expr(out);
 	}
 }

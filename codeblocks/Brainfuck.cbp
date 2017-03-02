@@ -37,6 +37,7 @@
 		<Unit filename="../bf/get_num.bf" />
 		<Unit filename="../bf/hello_world.bf" />
 		<Unit filename="../bf/lerp.bf" />
+		<Unit filename="../bf/phone_numbers.bf" />
 		<Unit filename="../bf/print_num.bf" />
 		<Unit filename="../bf/reverse_string.bf" />
 		<Unit filename="../bf/save_bmp.bf" />
