@@ -115,6 +115,8 @@ public:
 	{
 		return "(" + subs[0]->getC() + " + " + subs[1]->getC() + ")";
 	}
+	
+	bool isSum() {return true;}
 };
 
 Expr sum(Expr a, Expr b)

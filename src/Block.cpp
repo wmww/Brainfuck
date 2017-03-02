@@ -22,15 +22,13 @@ void BlockBase::appendAction(char c)
 		break;
 		
 	case '.':
-		addAction(outAction(getCell(pos).getExpr(pos)));
+		addAction(outAction(getCell(pos)));
 		break;
 		
 	case ',':
 		{
 			addAction(inAction(pos));
-			auto cell = getCell(pos);
-			cell.absoluteSet = false;
-			cell.val = expr(0);
+			getCell(pos) = exprFromData(pos);
 		}
 		break;
 	
@@ -60,7 +58,7 @@ string BlockBase::getC()
 	for (int i=int(dependsList.size())-1; i>=0; i--)
 	//for (auto i: dependsList)
 	{
-		out += "p[" + to_string(dependsList[i]) + "] = " + getCell(dependsList[i]).getExpr(dependsList[i])->getC() + ";\n";
+		out += "p[" + to_string(dependsList[i]) + "] = " + getCell(dependsList[i])->getC() + ";\n";
 		//out += "p[" + to_string(i) + "] = " + getCell(i).getExpr(i)->getC() + ";\n";
 	}
 	
@@ -140,7 +138,7 @@ void BlockBase::getDependsForCell(int cell, vector<int>& stack, vector<int>& out
 	
 	vector<int> firstLevel;
 	
-	getCell(cell).getExpr(cell)->getCellsUsed(firstLevel);
+	getCell(cell)->getCellsUsed(firstLevel);
 	
 	stack.push_back(cell);
 	
@@ -170,14 +168,14 @@ void BlockBase::addAction(Action action)
 	actions.push_back(action);
 }
 
-BlockBase::CellChange& BlockBase::getCell(int index)
+Expr& BlockBase::getCell(int index)
 {
 	if (cells.find(index) == cells.end())
 	{
 		if (isRoot)
-			cells[index] = {true, expr(0)};
+			cells[index] = expr(0);
 		else
-			cells[index] = {false, expr(0)};
+			cells[index] = exprFromData(index);
 	}
 	
 	return cells[index];
@@ -185,8 +183,8 @@ BlockBase::CellChange& BlockBase::getCell(int index)
 
 void BlockBase::addToCell(int index, Expr val)
 {
-	CellChange& cell = getCell(index);
-	cell.val = sum(cell.val, val);
+	Expr& cell = getCell(index);
+	cell = sum(cell, val);
 }
 
 Block BlockBase::getUnrolled()
@@ -199,14 +197,39 @@ Block BlockBase::getUnrolled()
 	//Expr basePosStartVal = target->getCell(target->pos).getExpr(target->pos);
 	Expr basePosStartVal = exprFromData(0);
 	
-	auto baseChange = getCell(0);
+	Expr baseChange = getCell(0);
 	
-	if (baseChange.absoluteSet || baseChange.val->isZero())
+	Expr changeToBasePerIter;
+	
+	if (baseChange->isSum() && baseChange->subs.size()==2)
 	{
-		return nullptr; // either endless loop or sets to zero, either way unrolling won't help
+		if (
+			baseChange->subs[0]->isFromCell() &&
+			baseChange->subs[0]->getVal() == 0 &&
+			baseChange->subs[1]->isLiteral() &&
+			baseChange->subs[1]->getVal() != 0
+			)
+		{
+			changeToBasePerIter = baseChange->subs[1];
+		}
+		else if (
+			baseChange->subs[1]->isFromCell() &&
+			baseChange->subs[1]->getVal() == 0 &&
+			baseChange->subs[0]->isLiteral() &&
+			baseChange->subs[0]->getVal() != 0
+			)
+		{
+			changeToBasePerIter = baseChange->subs[0];
+		}
+		else
+		{
+			return nullptr;
+		}
 	}
-	
-	Expr changeToBasePerIter = baseChange.val;
+	else
+	{
+		return nullptr;
+	}
 	
 	Expr iters = quotient(basePosStartVal, negative(changeToBasePerIter));
 	
@@ -216,18 +239,50 @@ Block BlockBase::getUnrolled()
 	{
 		if (i.first != 0)
 		{
-			if (i.second.absoluteSet)
+			if (i.second->isFromCell())
 			{
-				out->cells[i.first] = {true, i.second.val};
+				if (i.second->getVal() != i.first)
+				{
+					return nullptr;
+				}
+				else
+				{
+					// do nothing
+				}
+			}
+			if (i.second->isSum())
+			{
+				if (
+					i.second->subs.size()==2 &&
+					i.second->subs[0]->isFromCell() &&
+					i.second->subs[0]->getVal() == i.first &&
+					i.second->subs[1]->isLiteral()
+					)
+				{
+					out->cells[i.first] = sum(exprFromData(i.first), product(i.second->subs[1], iters));
+				}
+				else if (
+					i.second->subs.size()==2 &&
+					i.second->subs[1]->isFromCell() &&
+					i.second->subs[1]->getVal() == i.first &&
+					i.second->subs[0]->isLiteral()
+					)
+				{
+					out->cells[i.first] = sum(exprFromData(i.first), product(i.second->subs[0], iters));
+				}
+			}
+			else if (i.second->isLiteral())
+			{
+				out->cells[i.first] = i.second;
 			}
 			else
 			{
-				out->addToCell(i.first, product(i.second.val, iters));
+				return nullptr;
 			}
 		}
 	}
 	
-	out->cells[0] = {true, expr(0)};
+	out->cells[0] = expr(0);
 	
 	return out;
 }
@@ -244,18 +299,9 @@ void BlockBase::mergeFrom(Block target)
 	
 	for (auto i: target->cells)
 	{
-		if (i.second.absoluteSet)
-		{
-			Expr val = i.second.val;
-			replaceCellRefsWithCellVals(val);
-			cells[i.first + pos] = {true, val};
-		}
-		else
-		{
-			Expr val = i.second.val;
-			replaceCellRefsWithCellVals(val);
-			addToCell(i.first + pos, val);
-		}
+		Expr val = i.second;
+		replaceCellRefsWithCellVals(val);
+		cells[i.first + pos] = val;
 	}
 	
 	pos+=target->pos;
@@ -267,7 +313,7 @@ void BlockBase::replaceCellRefsWithCellVals(Expr& val)
 	
 	if (val->isFromCell())
 	{
-		val = getCell(val->getVal()+pos).getExpr(val->getVal()+pos);
+		val = getCell(val->getVal()+pos);
 	}
 	
 	for (int i=0; i<int(val->subs.size()); i++)
@@ -276,14 +322,6 @@ void BlockBase::replaceCellRefsWithCellVals(Expr& val)
 	}
 	
 	cout << "out: " << val->getC() << endl;
-}
-
-Expr BlockBase::CellChange::getExpr(int pos)
-{
-	return absoluteSet ?
-		val
-	:
-		sum(val, exprFromData(pos));
 }
 
 /*

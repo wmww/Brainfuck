@@ -27,6 +27,7 @@ public:
 	virtual bool isFromCell() {return false;}
 	virtual bool isZero() {return false;}
 	virtual bool isOne() {return false;}
+	virtual bool isSum() {return false;}
 	virtual int getVal() {cout << "getLiteralVal() called on an invalid expr" << endl; return 0;}
 	virtual bool equals(shared_ptr<ExprBase> other) {return false;}
 	void getCellsUsed(vector<int>& out); //when it returns, out is populated with all cells used in this expression
