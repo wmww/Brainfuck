@@ -297,11 +297,19 @@ void BlockBase::mergeFrom(Block target)
 	
 	//cout << "BlockBase::mergeFrom is fucking broken. either fix it or don't call it." << endl;
 	
+	vector<std::pair<int, Expr>> newVals;
+	
 	for (auto i: target->cells)
 	{
 		Expr val = i.second;
 		replaceCellRefsWithCellVals(val);
-		cells[i.first + pos] = val;
+		newVals.push_back(std::make_pair(i.first + pos, val->getOptimized()));
+		//cells[i.first + pos] = val->getOptimized();
+	}
+	
+	for (auto i: newVals)
+	{
+		cells[i.first] = i.second;
 	}
 	
 	pos+=target->pos;
@@ -314,11 +322,14 @@ void BlockBase::replaceCellRefsWithCellVals(Expr& val)
 	if (val->isFromCell())
 	{
 		val = getCell(val->getVal()+pos);
+		//cout << "is from cell, cell val: " << val->getC() << endl;
 	}
-	
-	for (int i=0; i<int(val->subs.size()); i++)
+	else
 	{
-		replaceCellRefsWithCellVals(val->subs[i]);
+		for (int i=0; i<int(val->subs.size()); i++)
+		{
+			replaceCellRefsWithCellVals(val->subs[i]);
+		}
 	}
 	
 	cout << "out: " << val->getC() << endl;

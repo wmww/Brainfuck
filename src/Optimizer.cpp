@@ -24,9 +24,9 @@ void Optimizer::add(char c)
 		{
 			auto unrolledBlock = currentBlock->getUnrolled();
 			
-			if (0)//(currentBlock->parentLoop->contentsBlock == currentBlock && unrolledBlock)
+			if (currentBlock->parentLoop->contentsBlock == currentBlock && unrolledBlock)
 			{
-				if (0)
+				if (1)
 				{
 					currentBlock = currentBlock->parentLoop->prevBlock;
 					currentBlock->nextLoop = nullptr;
