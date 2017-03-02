@@ -4,6 +4,7 @@
 #include "Expr.h"
 #include "Action.h"
 #include <map>
+#include <unordered_map>
 
 /*
 #include <map>
@@ -35,6 +36,15 @@ public:
 	
 	string getC();
 	
+	//should be given an empty vector
+	//when it returns, out will be populated with a cell coming after all cells that cahnge values it depends on
+	// if there is a cycle, all the cells that would cause a problem get put into vars needed
+	void assembleDependsList(vector<int>& out, vector<int>& varsNeeded);
+	
+	//appended to the out array is every cell this cell needs the value from, there may be duplicates
+	//the last value will be the cell itself
+	void getDependsForCell(int cell, vector<int>& out);
+	
 	void addAction(Action action);
 	
 	CellChange& getCell(int index);
@@ -45,7 +55,7 @@ public:
 	void mergeFrom(shared_ptr<BlockBase> target);
 	
 	int pos = 0;
-	std::map<int, CellChange> cells;
+	std::unordered_map<int, CellChange> cells;
 	vector<Action> actions;
 	bool isRoot = false;
 	shared_ptr<LoopBase> parentLoop = nullptr;

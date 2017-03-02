@@ -29,7 +29,7 @@ public:
 	
 	bool isOne() {return val==1;}
 	
-	int getLiteralVal() {return val;}
+	int getVal() {return val;}
 	
 	bool equals(Expr other)
 	{
@@ -38,6 +38,19 @@ public:
 	
 	int val;
 };
+
+void ExprBase::getCellsUsed(vector<int>& out)
+{
+	for (auto i: subs)
+	{
+		i->getCellsUsed(out);
+	}
+	
+	if (isFromCell())
+	{
+		out.push_back(getVal());
+	}
+}
 
 Expr expr(int val)
 {
@@ -60,6 +73,10 @@ public:
 	{
 		return "p[" + to_string(pos) + "]";
 	}
+	
+	int getVal() {return pos;}
+	
+	bool isFromCell() {return true;}
 	
 	int pos;
 };
@@ -150,16 +167,16 @@ Expr product(Expr a, Expr b)
 	else if (a->isLiteral() && b->isLiteral())
 	{
 		return expr(
-			a->getLiteralVal()
+			a->getVal()
 			*
-			b->getLiteralVal()
+			b->getVal()
 		);
 	}
-	else if (a->isLiteral() && a->getLiteralVal() == -1)
+	else if (a->isLiteral() && a->getVal() == -1)
 	{
 		return negative(b);
 	}
-	else if (b->isLiteral() && b->getLiteralVal() == -1)
+	else if (b->isLiteral() && b->getVal() == -1)
 	{
 		return negative(a);
 	}
@@ -211,9 +228,9 @@ Expr quotient(Expr a, Expr b)
 	else if (a->isLiteral() && b->isLiteral())
 	{
 		return expr(
-			a->getLiteralVal()
+			a->getVal()
 			/
-			b->getLiteralVal()
+			b->getVal()
 		);
 	}
 	else
@@ -243,7 +260,7 @@ Expr negative(Expr a)
 	}
 	else if (a->isLiteral())
 	{
-		return expr(-a->getLiteralVal());
+		return expr(-a->getVal());
 	}
 	else
 	{

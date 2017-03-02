@@ -48,9 +48,18 @@ string BlockBase::getC()
 		out += i->getC();
 	}
 	
-	for (auto i: cells)
+	vector<int> dependsList;
+	vector<int> varsNeeded;
+	assembleDependsList(dependsList, varsNeeded);
+	
+	if (!varsNeeded.empty())
 	{
-		out += "p[" + to_string(i.first) + "] = " + i.second.getExpr(i.first)->getC() + ";\n";
+		cout << "vars needed not empty, this will likely cause trouble until vars are implemented" << endl;
+	}
+	
+	for (int i=int(dependsList.size())-1; i>=0; i--)
+	{
+		out += "p[" + to_string(dependsList[i]) + "] = " + getCell(dependsList[i]).getExpr(dependsList[i])->getC() + ";\n";
 	}
 	
 	if (pos)
@@ -58,12 +67,65 @@ string BlockBase::getC()
 		out += "\np += " + to_string(pos) + ";\n";
 	}
 	
+	out = "\n//start of block\n{\n"+indentString(out)+"}\n";
+	
 	if (nextLoop)
 	{
 		out += nextLoop->getC();
 	}
 	
 	return out;
+}
+
+void BlockBase::assembleDependsList(vector<int>& out, vector<int>& varsNeeded)
+{
+	if (!out.empty())
+	{
+		cout << "assembleDependsList called with out that isn't empty" << endl;
+	}
+	
+	for (auto i: cells)
+	{
+		vector<int> forCell;
+		getDependsForCell(i.first, forCell);
+		
+		for (auto j: forCell)
+		{
+			bool foundDup = false;
+			
+			for (auto k: out)
+			{
+				if (j == k)
+				{
+					foundDup = true;
+					break;
+				}
+			}
+			
+			if (!foundDup)
+			{
+				out.push_back(j);
+			}
+		}
+	}
+}
+
+void BlockBase::getDependsForCell(int cell, vector<int>& out)
+{
+	vector<int> firstLevel;
+	
+	getCell(cell).getExpr(cell)->getCellsUsed(firstLevel);
+	
+	for (auto i: firstLevel)
+	{
+		if (i!=cell)
+		{
+			getDependsForCell(i, out);
+			out.push_back(i);
+		}
+	}
+	
+	out.push_back(cell);
 }
 
 void BlockBase::addAction(Action action)
@@ -117,7 +179,14 @@ Block BlockBase::getUnrolled()
 	{
 		if (i.first != 0)
 		{
-			out->addToCell(i.first, product(i.second.val, iters));
+			if (i.second.absoluteSet)
+			{
+				out->cells[i.first] = {true, i.second.val};
+			}
+			else
+			{
+				out->addToCell(i.first, product(i.second.val, iters));
+			}
 		}
 	}
 	
