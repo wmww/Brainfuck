@@ -26,13 +26,13 @@ void Optimizer::add(char c)
 			
 			if (currentBlock->parentLoop->contentsBlock == currentBlock && unrolledBlock)
 			{
-				//currentBlock = currentBlock->parentLoop->prevBlock;
-				//currentBlock->nextLoop = nullptr;
-				//currentBlock->mergeFrom(unrolledBlock);
-				unrolledBlock->parentLoop = currentBlock->parentLoop->nextBlock->parentLoop;
-				currentBlock->parentLoop->nextBlock = unrolledBlock;
-				currentBlock->parentLoop->contentsBlock = nullptr;
-				currentBlock = unrolledBlock;
+				currentBlock = currentBlock->parentLoop->prevBlock;
+				currentBlock->nextLoop = nullptr;
+				currentBlock->mergeFrom(unrolledBlock);
+				//unrolledBlock->parentLoop = currentBlock->parentLoop->nextBlock->parentLoop;
+				//currentBlock->parentLoop->nextBlock = unrolledBlock;
+				//currentBlock->parentLoop->contentsBlock = nullptr;
+				//currentBlock = unrolledBlock;
 			}
 			else
 			{

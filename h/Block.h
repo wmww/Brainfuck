@@ -53,6 +53,7 @@ public:
 	
 	shared_ptr<BlockBase> getUnrolled();
 	void mergeFrom(shared_ptr<BlockBase> target);
+	void replaceCellRefsWithCellVals(Expr& val);
 	
 	int pos = 0;
 	std::unordered_map<int, CellChange> cells;

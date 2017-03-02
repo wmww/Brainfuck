@@ -240,17 +240,36 @@ void BlockBase::mergeFrom(Block target)
 		return;
 	}
 	
-	cout << "BlockBase::mergeFrom is fucking broken. either fix it or don't call it." << endl;
+	//cout << "BlockBase::mergeFrom is fucking broken. either fix it or don't call it." << endl;
 	
-	/*
 	for (auto i: target->cells)
 	{
 		if (i.second.absoluteSet)
 		{
-			cells[]
+			Expr val = i.second.val;
+			replaceCellRefsWithCellVals(val);
+			cells[i.first + pos] = {true, val};
+		}
+		else
+		{
+			Expr val = i.second.val;
+			replaceCellRefsWithCellVals(val);
+			addToCell(i.first + pos, val);
 		}
 	}
-	*/
+}
+
+void BlockBase::replaceCellRefsWithCellVals(Expr& val)
+{
+	if (val->isFromCell())
+	{
+		val = getCell(val->getVal()+pos).getExpr(val->getVal()+pos);
+	}
+	
+	for (Expr i: val->subs)
+	{
+		replaceCellRefsWithCellVals(i);
+	}
 }
 
 Expr BlockBase::CellChange::getExpr(int pos)
