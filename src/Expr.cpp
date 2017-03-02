@@ -400,7 +400,16 @@ public:
 			out->subs.push_back(i->getOptimized());
 		}
 		
-		return Expr(out);
+		if (out->subs.size() == 2 && out->subs[0]->isLiteral() && subs[1]->isLiteral())
+		{
+			return expr(out->subs[0]->getVal()/out->subs[1]->getVal());
+		}
+		else
+		{
+			return Expr(out);
+			
+		}
+		
 	}
 };
 

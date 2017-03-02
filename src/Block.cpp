@@ -67,7 +67,7 @@ string BlockBase::getC()
 		out += "\np += " + to_string(pos) + ";\n";
 	}
 	
-	out = "\n//start of block\n{\n"+indentString(out)+"}\n";
+	//out = "\n//start of block\n{\n"+indentString(out)+"}\n";
 	
 	if (nextLoop)
 	{
@@ -317,7 +317,7 @@ void BlockBase::mergeFrom(Block target)
 
 void BlockBase::replaceCellRefsWithCellVals(Expr& val)
 {
-	cout << "in: " << val->getC() << endl;
+	//cout << "in: " << val->getC() << endl;
 	
 	if (val->isFromCell())
 	{
@@ -332,7 +332,7 @@ void BlockBase::replaceCellRefsWithCellVals(Expr& val)
 		}
 	}
 	
-	cout << "out: " << val->getC() << endl;
+	//cout << "out: " << val->getC() << endl;
 }
 
 /*
