@@ -41,9 +41,9 @@ public:
 	// if there is a cycle, all the cells that would cause a problem get put into vars needed
 	void assembleDependsList(vector<int>& out, vector<int>& varsNeeded);
 	
-	//appended to the out array is every cell this cell needs the value from, there may be duplicates
+	//appended to the out array is every cell this cell needs the value from, there will be no duplicates
 	//the last value will be the cell itself
-	void getDependsForCell(int cell, vector<int>& out);
+	void getDependsForCell(int cell, vector<int>& stack, vector<int>& out, vector<int>& varsNeeded);
 	
 	void addAction(Action action);
 	

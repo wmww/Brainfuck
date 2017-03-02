@@ -58,8 +58,10 @@ string BlockBase::getC()
 	}
 	
 	for (int i=int(dependsList.size())-1; i>=0; i--)
+	//for (auto i: dependsList)
 	{
 		out += "p[" + to_string(dependsList[i]) + "] = " + getCell(dependsList[i]).getExpr(dependsList[i])->getC() + ";\n";
+		//out += "p[" + to_string(i) + "] = " + getCell(i).getExpr(i)->getC() + ";\n";
 	}
 	
 	if (pos)
@@ -86,42 +88,77 @@ void BlockBase::assembleDependsList(vector<int>& out, vector<int>& varsNeeded)
 	
 	for (auto i: cells)
 	{
-		vector<int> forCell;
+		vector<int> stack;
+		getDependsForCell(i.first, stack, out, varsNeeded);
+		
+		/*vector<int> forCell;
 		getDependsForCell(i.first, forCell);
 		
 		for (auto j: forCell)
 		{
-			bool foundDup = false;
-			
-			for (auto k: out)
+			for (int k=0; k<int(out.size()); k++)
 			{
-				if (j == k)
+				if (j == out[k])
 				{
-					foundDup = true;
-					break;
+					out.erase(out.begin()+k);
+					k--;
 				}
 			}
 			
-			if (!foundDup)
-			{
-				out.push_back(j);
-			}
-		}
+			out.push_back(j);
+		}*/
+		
 	}
 }
 
-void BlockBase::getDependsForCell(int cell, vector<int>& out)
+void BlockBase::getDependsForCell(int cell, vector<int>& stack, vector<int>& out, vector<int>& varsNeeded)
 {
+	for (auto j: varsNeeded)
+	{
+		if (cell == j)
+		{
+			return;
+		}
+	}
+	
+	for (auto j: stack)
+	{
+		if (cell == j)
+		{
+			varsNeeded.push_back(cell);
+			return;
+		}
+	}
+	
+	for (auto j: out)
+	{
+		if (cell == j)
+		{
+			return;
+		}
+	}
+	
 	vector<int> firstLevel;
 	
 	getCell(cell).getExpr(cell)->getCellsUsed(firstLevel);
 	
+	stack.push_back(cell);
+	
 	for (auto i: firstLevel)
 	{
-		if (i!=cell)
+		if (i != cell)
 		{
-			getDependsForCell(i, out);
-			out.push_back(i);
+			getDependsForCell(i, stack, out, varsNeeded);
+		}
+	}
+	
+	stack.pop_back();
+	
+	for (auto j: varsNeeded)
+	{
+		if (cell == j)
+		{
+			return;
 		}
 	}
 	
@@ -171,7 +208,7 @@ Block BlockBase::getUnrolled()
 	
 	Expr changeToBasePerIter = baseChange.val;
 	
-	Expr iters = quotient(basePosStartVal, changeToBasePerIter);
+	Expr iters = quotient(basePosStartVal, negative(changeToBasePerIter));
 	
 	Block out = Block(new BlockBase());
 	

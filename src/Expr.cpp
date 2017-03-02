@@ -154,7 +154,23 @@ class ExprProduct: public ExprBase
 public:
 	string getC()
 	{
-		return "(" + subs[0]->getC() + " * " + subs[1]->getC() + ")";
+		string out;
+		
+		out += "(";
+		
+		for (int i=0; i<int(subs.size()); i++)
+		{
+			if (i)
+			{
+				out += " * ";
+			}
+			
+			out += subs[i]->getC();
+		}
+		
+		out += ")";
+		
+		return out;
 	}
 };
 
@@ -171,14 +187,6 @@ Expr product(Expr a, Expr b)
 			*
 			b->getVal()
 		);
-	}
-	else if (a->isLiteral() && a->getVal() == -1)
-	{
-		return negative(b);
-	}
-	else if (b->isLiteral() && b->getVal() == -1)
-	{
-		return negative(a);
 	}
 	else if (a->isOne())
 	{
@@ -197,6 +205,10 @@ Expr product(Expr a, Expr b)
 	}
 }
 
+Expr negative(Expr a)
+{
+	return product(a, expr(-1));
+}
 
 class ExprQuotient: public ExprBase
 {
@@ -241,37 +253,6 @@ Expr quotient(Expr a, Expr b)
 		return Expr(out);
 	}
 }
-
-
-class ExprNegative: public ExprBase
-{
-public:
-	string getC()
-	{
-		return "(-" + subs[0]->getC() + ")";
-	}
-};
-
-Expr negative(Expr a)
-{
-	if (a->isIdk())
-	{
-		return exprIdk();
-	}
-	else if (a->isLiteral())
-	{
-		return expr(-a->getVal());
-	}
-	else
-	{
-		auto out = new ExprNegative;
-		out->subs.push_back(move(a));
-		return Expr(out);
-	}
-}
-
-
-
 
 class ExprIdk: public ExprBase
 {
