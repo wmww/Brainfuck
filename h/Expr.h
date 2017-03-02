@@ -28,18 +28,22 @@ public:
 	virtual bool isZero() {return false;}
 	virtual bool isOne() {return false;}
 	virtual bool isSum() {return false;}
+	virtual bool isProduct() {return false;}
 	virtual int getVal() {cout << "getLiteralVal() called on an invalid expr" << endl; return 0;}
 	virtual bool equals(shared_ptr<ExprBase> other) {return false;}
 	void getCellsUsed(vector<int>& out); //when it returns, out is populated with all cells used in this expression
+	
+	// makes an optimized copy
+	virtual shared_ptr<ExprBase> getOptimized() = 0;
 };
 
 typedef shared_ptr<ExprBase> Expr;
 
 Expr expr();
-Expr exprIdk();
+//Expr exprIdk();
 Expr expr(int val);
 Expr exprFromData(int pos);
-Expr expr(Variable val);
+//Expr expr(Variable val);
 Expr sum(Expr a, Expr b);
 Expr product(Expr a, Expr b);
 Expr quotient(Expr a, Expr b);

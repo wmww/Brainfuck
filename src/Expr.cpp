@@ -36,6 +36,11 @@ public:
 		return (other->isLiteral() && (((ExprLiteral*)&(*other))->val == val));
 	}
 	
+	Expr getOptimized()
+	{
+		return expr(val);
+	}
+	
 	int val;
 };
 
@@ -78,6 +83,11 @@ public:
 	
 	bool isFromCell() {return true;}
 	
+	Expr getOptimized()
+	{
+		return exprFromData(pos);
+	}
+	
 	int pos;
 };
 
@@ -89,7 +99,7 @@ Expr exprFromData(int pos)
 }
 
 
-
+/*
 class ExprVariable: public ExprBase
 {
 public:
@@ -107,13 +117,85 @@ Expr expr(Variable val)
 	out->val = val;
 	return Expr(out);
 }
+*/
 
 class ExprSum: public ExprBase
 {
 public:
 	string getC()
 	{
-		return "(" + subs[0]->getC() + " + " + subs[1]->getC() + ")";
+		string out;
+		
+		out += "(";
+		
+		for (int i=0; i<int(subs.size()); i++)
+		{
+			if (i)
+			{
+				out += " + ";
+			}
+			
+			out += subs[i]->getC();
+		}
+		
+		out += ")";
+		
+		return out;
+	}
+	
+	Expr getOptimized()
+	{
+		vector<Expr> allSubs;
+		
+		for (auto i: subs)
+		{
+			Expr e = i->getOptimized();
+			
+			if (e->isSum())
+			{
+				for (auto j: e->subs)
+				{
+					allSubs.push_back(j);
+				}
+			}
+			else
+			{
+				allSubs.push_back(e);
+			}
+		}
+		
+		int literalVal = 0;
+		Expr out = Expr(new ExprSum);
+		
+		for (auto i: allSubs)
+		{
+			if (i->isLiteral())
+			{
+				literalVal += i->getVal();
+			}
+			else
+			{
+				out->subs.push_back(i);
+			}
+		}
+		
+		if (literalVal != 0)
+		{
+			out->subs.push_back(expr(literalVal));
+		}
+		
+		if (out->subs.size() == 0)
+		{
+			return expr(0);
+		}
+		else if (out->subs.size() == 1)
+		{
+			return out->subs[0];
+		}
+		else
+		{
+			return out;
+		}
 	}
 	
 	bool isSum() {return true;}
@@ -121,16 +203,16 @@ public:
 
 Expr sum(Expr a, Expr b)
 {
-	if (a->isIdk() || b->isIdk())
+	/*if (a->isIdk() || b->isIdk())
 	{
 		return exprIdk();
 	}
 	else if (a->isLiteral() && b->isLiteral())
 	{
 		return expr(
-			((ExprLiteral*)&(*a))->val
+			a->getVal()
 			+
-			((ExprLiteral*)&(*b))->val
+			b->getVal()
 		);
 	}
 	else if (a->isZero())
@@ -144,10 +226,38 @@ Expr sum(Expr a, Expr b)
 	else
 	{
 		auto out = new ExprSum;
-		out->subs.push_back(move(a));
-		out->subs.push_back(move(b));
+		
+		if (a->isSum())
+		{
+			for (auto i: a->subs)
+			{
+				out->subs.push_back(i);
+			}
+		}
+		else
+		{
+			out->subs.push_back(move(a));
+		}
+		
+		if (b->isSum())
+		{
+			for (auto i: b->subs)
+			{
+				out->subs.push_back(i);
+			}
+		}
+		else
+		{
+			out->subs.push_back(move(b));
+		}
+		
 		return Expr(out);
-	}
+	}*/
+	
+	ExprSum out;
+	out.subs.push_back(a);
+	out.subs.push_back(b);
+	return out.getOptimized();
 }
 
 
@@ -174,11 +284,72 @@ public:
 		
 		return out;
 	}
+	
+	Expr getOptimized()
+	{
+		vector<Expr> allSubs;
+		
+		for (auto i: subs)
+		{
+			Expr e = i->getOptimized();
+			
+			if (e->isProduct())
+			{
+				for (auto j: e->subs)
+				{
+					allSubs.push_back(j);
+				}
+			}
+			else
+			{
+				allSubs.push_back(e);
+			}
+		}
+		
+		int literalVal = 1;
+		Expr out = Expr(new ExprProduct);
+		
+		for (auto i: allSubs)
+		{
+			if (i->isZero())
+			{
+				return expr(0);
+			}
+			else if (i->isLiteral())
+			{
+				literalVal *= i->getVal();
+			}
+			else
+			{
+				out->subs.push_back(i);
+			}
+		}
+		
+		if (literalVal != 1)
+		{
+			out->subs.push_back(expr(literalVal));
+		}
+		
+		if (out->subs.size() == 0)
+		{
+			return expr(1);
+		}
+		else if (out->subs.size() == 1)
+		{
+			return out->subs[0];
+		}
+		else
+		{
+			return out;
+		}
+	}
+	
+	virtual bool isProduct() {return true;}
 };
 
 Expr product(Expr a, Expr b)
 {
-	if (a->isIdk() || b->isIdk())
+	/*if (a->isIdk() || b->isIdk())
 	{
 		return exprIdk();
 	}
@@ -198,12 +369,12 @@ Expr product(Expr a, Expr b)
 	{
 		return a;
 	}
-	else
+	else*/
 	{
 		auto out = new ExprProduct;
 		out->subs.push_back(move(a));
 		out->subs.push_back(move(b));
-		return Expr(out);
+		return Expr(out)->getOptimized();
 	}
 }
 
@@ -219,17 +390,31 @@ public:
 	{
 		return "(" + subs[0]->getC() + " / " + subs[1]->getC() + ")";
 	}
+	
+	Expr getOptimized()
+	{
+		auto out = new ExprQuotient;
+		
+		for (auto i: subs)
+		{
+			out->subs.push_back(i->getOptimized());
+		}
+		
+		return Expr(out);
+	}
 };
 
 Expr quotient(Expr a, Expr b)
 {
-	if (a->isIdk() || b->isIdk())
+	
+	/*if (a->isIdk() || b->isIdk())
 	{
 		return exprIdk();
 	}
-	else if (b->isZero())
+	else*/ if (b->isZero())
 	{
-		return exprIdk();
+		//return exprIdk();
+		return expr(0);
 	}
 	else if (b->isOne())
 	{
@@ -252,10 +437,12 @@ Expr quotient(Expr a, Expr b)
 		auto out = new ExprQuotient;
 		out->subs.push_back(move(a));
 		out->subs.push_back(move(b));
-		return Expr(out);
+		return Expr(out)->getOptimized();
 	}
+	
 }
 
+/*
 class ExprIdk: public ExprBase
 {
 public:
@@ -267,10 +454,11 @@ public:
 	bool isIdk() {return true;}
 };
 
+
 Expr exprIdk()
 {
 	auto out = new ExprIdk;
 	return Expr(out);
 }
-
+*/
 
