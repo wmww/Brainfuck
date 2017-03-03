@@ -22,16 +22,21 @@ void Optimizer::add(char c)
 	case ']':
 		if (currentBlock->parentLoop)
 		{
+			//cout << "original: " << endl << indentString(currentBlock->getC()) << endl << endl;
+			
 			auto unrolledBlock = currentBlock->getUnrolled();
+			
+			//cout << "merging: " << endl << indentString(unrolledBlock->getC()) << endl << endl << "into: " << endl << indentString(currentBlock->getC()) << endl << endl;
+			//cout << "unrolled: " << endl << indentString(unrolledBlock->getC()) << endl << endl;
 			
 			if (currentBlock->parentLoop->contentsBlock == currentBlock && unrolledBlock)
 			{
 				if (1)
 				{
+					
 					currentBlock = currentBlock->parentLoop->prevBlock;
 					currentBlock->nextLoop = nullptr;
 					currentBlock->mergeFrom(unrolledBlock);
-					
 				}
 				else
 				{

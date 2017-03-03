@@ -223,11 +223,13 @@ Block BlockBase::getUnrolled()
 		}
 		else
 		{
+			cout << "1" << endl;
 			return nullptr;
 		}
 	}
 	else
 	{
+		cout << "2" << endl;
 		return nullptr;
 	}
 	
@@ -239,45 +241,51 @@ Block BlockBase::getUnrolled()
 	{
 		if (i.first != 0)
 		{
-			if (i.second->isFromCell())
-			{
-				if (i.second->getVal() != i.first)
-				{
-					return nullptr;
-				}
-				else
-				{
-					// do nothing
-				}
-			}
+			vector<int> depends;
+			
+			Expr val = expr(0);
+			bool isReletive = false;
+			
 			if (i.second->isSum())
 			{
-				if (
-					i.second->subs.size()==2 &&
-					i.second->subs[0]->isFromCell() &&
-					i.second->subs[0]->getVal() == i.first &&
-					i.second->subs[1]->isLiteral()
-					)
+				for (auto j: i.second->subs)
 				{
-					out->cells[i.first] = sum(exprFromData(i.first), product(i.second->subs[1], iters));
+					
+					
+					if (!isReletive && j->isFromCell() && j->getVal() == i.first)
+					{
+						isReletive = true;
+					}
+					else
+					{
+						val = sum(val, j);
+					}
 				}
-				else if (
-					i.second->subs.size()==2 &&
-					i.second->subs[1]->isFromCell() &&
-					i.second->subs[1]->getVal() == i.first &&
-					i.second->subs[0]->isLiteral()
-					)
-				{
-					out->cells[i.first] = sum(exprFromData(i.first), product(i.second->subs[0], iters));
-				}
-			}
-			else if (i.second->isLiteral())
-			{
-				out->cells[i.first] = i.second;
 			}
 			else
 			{
-				return nullptr;
+				val = i.second->getOptimized();
+			}
+			
+			val->getCellsUsed(depends);
+			
+			for (auto j: depends)
+			{
+				Expr cellVal = getCell(j);
+				
+				if (!cellVal->isFromCell() || cellVal->getVal() != j)
+				{
+					return nullptr;
+				}
+			}
+			
+			if (isReletive)
+			{
+				out->cells[i.first] = sum(product(val, iters), exprFromData(i.first));
+			}
+			else
+			{
+				out->cells[i.first] = val;
 			}
 		}
 	}
@@ -289,6 +297,8 @@ Block BlockBase::getUnrolled()
 
 void BlockBase::mergeFrom(Block target)
 {
+	//cout << "merging: " << endl << indentString(target->getC()) << endl << endl << "into: " << endl << indentString(getC()) << endl << endl;
+	
 	if (!target->actions.empty())
 	{
 		cout << "BlockBase::mergeFrom called with target that has actions" << endl;
@@ -312,7 +322,13 @@ void BlockBase::mergeFrom(Block target)
 		cells[i.first] = i.second;
 	}
 	
+	//cout << "pos: " << pos << endl;
+	
 	pos+=target->pos;
+	
+	//cout << "pos: " << pos << endl;
+	
+	//cout << "result: " << endl << indentString(getC()) << endl << endl;
 }
 
 void BlockBase::replaceCellRefsWithCellVals(Expr& val)
