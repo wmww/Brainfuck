@@ -34,6 +34,7 @@
 		</Compiler>
 		<Unit filename="../bf/calc_cell_size.bf" />
 		<Unit filename="../bf/divide.bf" />
+		<Unit filename="../bf/draw_h_line.bf" />
 		<Unit filename="../bf/get_num.bf" />
 		<Unit filename="../bf/hello_world.bf" />
 		<Unit filename="../bf/lerp.bf" />

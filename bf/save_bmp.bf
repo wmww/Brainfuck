@@ -1,5 +1,8 @@
 currently a 320 by 240 resolution is assumed
-should be called 2 zeroed cells behind a pixmap
+should be called 5 zeroed cells behind a pixmap
+pixmap format should be
+	0	0	b	g	r
+
 
 ++++++[>+++++++++++<-]>			66 aka 'B'
 .[-]<
@@ -58,13 +61,13 @@ should be called 2 zeroed cells behind a pixmap
 
 
 put 76800 aka 320x240 aka 8x8x5x8x6x5 in the 2nd cell and leave off on it
-++++++++[>++++++++<-]>[<+++++>-]<[>++++++++<-]>[<++++++>-]<[>+++++<-]>
+->>>>++++++++[>++++++++<-]>[<+++++>-]<[>++++++++<-]>[<++++++>-]<[>+++++<-]>
 
 [ this loops through the entire bitmap
+	>>.>.>.<<<<			write three colors
 	
-	>+++.>+++++.>++++++.<<<			write three colors
-	
-	[>>>>+<<<<-]>>>>-				move one minus the current location to 4 spots over
+	[>>>>>+<<<<<-]>>>>>-				move one minus the current location to 4 spots over
 ]
++[-<<<<<+] go back to start
 
 
