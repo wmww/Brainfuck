@@ -31,7 +31,7 @@ void Optimizer::add(char c)
 			
 			if (currentBlock->parentLoop->contentsBlock == currentBlock && unrolledBlock)
 			{
-				if (1)
+				if (0) // this should be 1, but if it is then something is broken. zero works fine and is almost as fast
 				{
 					
 					currentBlock = currentBlock->parentLoop->prevBlock;
