@@ -1,1 +1,1 @@
-This is a interpreter I have wretten in C++ for the esoteric programming language brainfuck
+A Brainfuck interpreter and highly optimized Brainfuck-to-C transpiler I have wretten in C++, as well as a fair bit of BF code
