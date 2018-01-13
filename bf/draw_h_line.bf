@@ -4,7 +4,9 @@ at position 5 should start a pixmap
 	x	y	l	w	0
 
 >[>>[>+>+<<-]>[<+>-]<<<-]>>[-]<<<
+
 [>>>>>+<<<<<-]-
+
 >>[>>>>+<<<<-]>>>
 
 [
@@ -17,3 +19,4 @@ at position 5 should start a pixmap
 	<
 	[>>>>>+<<<<<-]>>>>>-
 ] < + [-<<<<<+]
+
